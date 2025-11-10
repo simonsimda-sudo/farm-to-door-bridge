@@ -57,6 +57,22 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        organic: {
+          green: "hsl(var(--organic-green))",
+          "green-light": "hsl(var(--organic-green-light))",
+          "green-dark": "hsl(var(--organic-green-dark))",
+        },
+        earth: {
+          warm: "hsl(var(--earth-warm))",
+          tan: "hsl(var(--earth-tan))",
+          brown: "hsl(var(--earth-brown))",
+        },
+        fresh: {
+          green: "hsl(var(--fresh-green))",
+        },
+        harvest: {
+          orange: "hsl(var(--harvest-orange))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
