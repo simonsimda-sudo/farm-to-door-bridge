@@ -4,22 +4,19 @@ import { ProducerForm } from "@/components/ProducerForm";
 import { Leaf, TruckIcon, Users, CheckCircle2, Sprout, ShieldCheck } from "lucide-react";
 import heroImage from "@/assets/hero-organic-produce.jpg";
 import farmImage from "@/assets/farm-landscape.jpg";
-
 const Index = () => {
   const [formOpen, setFormOpen] = useState(false);
-
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
-    element?.scrollIntoView({ behavior: "smooth" });
+    element?.scrollIntoView({
+      behavior: "smooth"
+    });
   };
-
-  return (
-    <div className="min-h-screen">
+  return <div className="min-h-screen">
       {/* Hero Section */}
-      <section
-        className="relative min-h-screen flex items-center justify-center bg-cover bg-center"
-        style={{ backgroundImage: `url(${heroImage})` }}
-      >
+      <section className="relative min-h-screen flex items-center justify-center bg-cover bg-center" style={{
+      backgroundImage: `url(${heroImage})`
+    }}>
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
         <div className="relative z-10 container mx-auto px-4 text-center">
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-2xl">
@@ -35,12 +32,7 @@ const Index = () => {
             <Button size="lg" className="text-lg px-8 py-6">
               Shop Fresh Produce
             </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="text-lg px-8 py-6 bg-white/90 hover:bg-white border-2"
-              onClick={() => setFormOpen(true)}
-            >
+            <Button size="lg" variant="outline" className="text-lg px-8 py-6 bg-white/90 hover:bg-white border-2" onClick={() => setFormOpen(true)}>
               Join as a Producer
             </Button>
           </div>
@@ -144,20 +136,16 @@ const Index = () => {
       </section>
 
       {/* For Producers */}
-      <section
-        id="for-producers"
-        className="py-24 bg-cover bg-center relative"
-        style={{ backgroundImage: `url(${farmImage})` }}
-      >
+      <section id="for-producers" className="py-24 bg-cover bg-center relative" style={{
+      backgroundImage: `url(${farmImage})`
+    }}>
         <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/80" />
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl">
             <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
               For Producers
             </h2>
-            <p className="text-xl text-white/90 mb-8">
-              Join a network that values quality and integrity. BioBridge highlights your products, your practices, and your brand—while we support visibility, ordering, and last-mile logistics.
-            </p>
+            <p className="text-xl text-white/90 mb-8">Join a network that values quality and integrity. BioBridge highlights your products, your practices, and your brand - while we support visibility, ordering, and last-mile logistics.</p>
             <div className="space-y-4 mb-10">
               <div className="flex items-start gap-3">
                 <CheckCircle2 className="w-6 h-6 text-fresh-green mt-1 flex-shrink-0" />
@@ -172,11 +160,7 @@ const Index = () => {
                 <p className="text-lg text-white">Let us simplify the operational overhead</p>
               </div>
             </div>
-            <Button
-              size="lg"
-              className="text-lg px-8 py-6"
-              onClick={() => setFormOpen(true)}
-            >
+            <Button size="lg" className="text-lg px-8 py-6" onClick={() => setFormOpen(true)}>
               Join as a Producer
             </Button>
           </div>
@@ -196,12 +180,7 @@ const Index = () => {
             <Button size="lg" className="text-lg px-8 py-6">
               Shop Fresh Produce
             </Button>
-            <Button
-              size="lg"
-              variant="secondary"
-              className="text-lg px-8 py-6"
-              onClick={() => setFormOpen(true)}
-            >
+            <Button size="lg" variant="secondary" className="text-lg px-8 py-6" onClick={() => setFormOpen(true)}>
               Join as a Producer
             </Button>
           </div>
@@ -235,8 +214,6 @@ const Index = () => {
       </footer>
 
       <ProducerForm open={formOpen} onOpenChange={setFormOpen} />
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
