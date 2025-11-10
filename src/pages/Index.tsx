@@ -174,7 +174,7 @@ const Index = () => {
             Our Difference
           </h2>
           <p className="text-xl text-muted-foreground max-w-4xl mx-auto mb-12">
-            We combine rigorous curation, transparent storytelling, and hands-on logistics to deliver organic food that stands up to scrutiny—on taste, on quality, and on values.
+            We combine careful selection, transparent storytelling, and hands-on logistics to deliver organic food that stands up to scrutiny—on taste, on quality, and on values.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="text-lg px-8 py-6">
