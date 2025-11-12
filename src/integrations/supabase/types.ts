@@ -14,7 +14,181 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      categories: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      farm_certifications: {
+        Row: {
+          certification: string
+          created_at: string
+          farm_id: string
+          id: string
+        }
+        Insert: {
+          certification: string
+          created_at?: string
+          farm_id: string
+          id?: string
+        }
+        Update: {
+          certification?: string
+          created_at?: string
+          farm_id?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "farm_certifications_farm_id_fkey"
+            columns: ["farm_id"]
+            isOneToOne: false
+            referencedRelation: "farms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      farm_practices: {
+        Row: {
+          created_at: string
+          farm_id: string
+          id: string
+          practice: string
+        }
+        Insert: {
+          created_at?: string
+          farm_id: string
+          id?: string
+          practice: string
+        }
+        Update: {
+          created_at?: string
+          farm_id?: string
+          id?: string
+          practice?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "farm_practices_farm_id_fkey"
+            columns: ["farm_id"]
+            isOneToOne: false
+            referencedRelation: "farms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      farms: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          location: string
+          name: string
+          region: string
+          story: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          location: string
+          name: string
+          region: string
+          story?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          location?: string
+          name?: string
+          region?: string
+          story?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          category_id: string | null
+          certification: string
+          created_at: string
+          delivery_estimate: string
+          description: string | null
+          farm_id: string
+          id: string
+          image_url: string | null
+          in_stock: boolean
+          name: string
+          price: number
+          unit: string
+          updated_at: string
+        }
+        Insert: {
+          category_id?: string | null
+          certification: string
+          created_at?: string
+          delivery_estimate?: string
+          description?: string | null
+          farm_id: string
+          id?: string
+          image_url?: string | null
+          in_stock?: boolean
+          name: string
+          price: number
+          unit?: string
+          updated_at?: string
+        }
+        Update: {
+          category_id?: string | null
+          certification?: string
+          created_at?: string
+          delivery_estimate?: string
+          description?: string | null
+          farm_id?: string
+          id?: string
+          image_url?: string | null
+          in_stock?: boolean
+          name?: string
+          price?: number
+          unit?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "products_farm_id_fkey"
+            columns: ["farm_id"]
+            isOneToOne: false
+            referencedRelation: "farms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

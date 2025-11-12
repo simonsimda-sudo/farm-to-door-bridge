@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -12,25 +12,67 @@ import { ProductCard } from "@/components/ProductCard";
 import { FarmProfileDialog } from "@/components/FarmProfileDialog";
 import { Link } from "react-router-dom";
 import { ProducerForm } from "@/components/ProducerForm";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
-// Placeholder product data structure - ready for real data injection
-const placeholderProducts = Array.from({ length: 12 }, (_, i) => ({
-  id: `product-${i + 1}`,
-  name: "Product Name",
-  description: "Seasonal, field-picked quality. Limited availability.",
-  image: "/placeholder.svg",
-  price: "€—",
-  unit: "unit",
-  certification: "Certified Organic",
-  farm: "Farm Name",
-  region: "Region",
-  deliveryEstimate: "Est. harvest → delivery",
-  farmId: `farm-${i + 1}`,
-}));
+interface Product {
+  id: string;
+  name: string;
+  description: string;
+  image_url: string | null;
+  price: number;
+  unit: string;
+  certification: string;
+  delivery_estimate: string;
+  in_stock: boolean;
+  farms: {
+    id: string;
+    name: string;
+    region: string;
+  };
+}
 
 const Marketplace = () => {
   const [selectedFarmId, setSelectedFarmId] = useState<string | null>(null);
   const [formOpen, setFormOpen] = useState(false);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("products")
+        .select(`
+          *,
+          farms (
+            id,
+            name,
+            region
+          )
+        `)
+        .eq("in_stock", true)
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+
+      setProducts(data || []);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      toast({
+        title: "Error loading products",
+        description: "Failed to load marketplace products. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -140,25 +182,46 @@ const Marketplace = () => {
       {/* Product Grid */}
       <section className="py-12">
         <div className="container mx-auto px-4">
-          <div className="mb-6">
-            <p className="text-sm text-muted-foreground">
-              Showing 12 of &#123;&#123;Total&#125;&#125;
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {placeholderProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                onViewFarm={(farmId) => setSelectedFarmId(farmId)}
-              />
-            ))}
-          </div>
-          <div className="mt-12 text-center">
-            <Button size="lg" variant="outline" disabled>
-              Load More
-            </Button>
-          </div>
+          {loading ? (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground">Loading products...</p>
+            </div>
+          ) : products.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground">
+                No products available yet. Check back soon!
+              </p>
+            </div>
+          ) : (
+            <>
+              <div className="mb-6">
+                <p className="text-sm text-muted-foreground">
+                  Showing {products.length} product{products.length !== 1 ? "s" : ""}
+                </p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {products.map((product) => (
+                  <ProductCard
+                    key={product.id}
+                    product={{
+                      id: product.id,
+                      name: product.name,
+                      description: product.description || "",
+                      image: product.image_url || "/placeholder.svg",
+                      price: `€${product.price.toFixed(2)}`,
+                      unit: product.unit,
+                      certification: product.certification,
+                      farm: product.farms.name,
+                      region: product.farms.region,
+                      deliveryEstimate: product.delivery_estimate,
+                      farmId: product.farms.id,
+                    }}
+                    onViewFarm={(farmId) => setSelectedFarmId(farmId)}
+                  />
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </section>
 
