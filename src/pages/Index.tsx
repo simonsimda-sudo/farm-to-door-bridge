@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ProducerForm } from "@/components/ProducerForm";
 import { Leaf, TruckIcon, Users, CheckCircle2, Sprout, ShieldCheck } from "lucide-react";
+import { Link } from "react-router-dom";
 import heroImage from "@/assets/hero-organic-produce.jpg";
 import farmImage from "@/assets/farm-landscape.jpg";
 const Index = () => {
@@ -29,8 +30,8 @@ const Index = () => {
             Discover exceptional organic produce with full transparency. Every product comes with provenance and a story.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="text-lg px-8 py-6">
-              Shop Fresh Produce
+            <Button size="lg" className="text-lg px-8 py-6" asChild>
+              <Link to="/marketplace">Shop Fresh Produce</Link>
             </Button>
             <Button size="lg" variant="outline" className="text-lg px-8 py-6 bg-white/90 hover:bg-white border-2" onClick={() => setFormOpen(true)}>
               Join as a Producer
@@ -177,8 +178,8 @@ const Index = () => {
             We combine careful selection, transparent storytelling, and hands-on logistics to deliver organic food that stands up to scrutiny—on taste, on quality, and on values.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="text-lg px-8 py-6">
-              Shop Fresh Produce
+            <Button size="lg" className="text-lg px-8 py-6" asChild>
+              <Link to="/marketplace">Shop Fresh Produce</Link>
             </Button>
             <Button size="lg" variant="secondary" className="text-lg px-8 py-6" onClick={() => setFormOpen(true)}>
               Join as a Producer
