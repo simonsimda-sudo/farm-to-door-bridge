@@ -206,6 +206,9 @@ const Index = () => {
               <button onClick={() => scrollToSection("for-producers")} className="hover:text-primary-foreground transition-colors">
                 For Producers
               </button>
+              <Link to="/auth" className="hover:text-primary-foreground transition-colors">
+                Admin Login
+              </Link>
             </div>
           </div>
           <div className="mt-8 pt-8 border-t border-primary-foreground/20 text-center text-primary-foreground/60">
