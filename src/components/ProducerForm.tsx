@@ -111,7 +111,7 @@ Profile: ${formData.profile}
               type="tel"
               value={formData.phone}
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-              placeholder="+1 (555) 000-0000"
+              placeholder="+49 30 1234 5678"
             />
           </div>
 
