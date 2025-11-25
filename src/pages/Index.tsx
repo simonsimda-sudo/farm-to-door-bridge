@@ -26,9 +26,7 @@ const Index = () => {
           <p className="text-2xl md:text-3xl text-white mb-4 drop-shadow-lg">
             From Certified Organic Farms to Your Door
           </p>
-          <p className="text-xl md:text-2xl text-white/90 mb-12 max-w-3xl mx-auto drop-shadow-lg">
-            Discover exceptional organic produce with full transparency. Every product comes with provenance and a story.
-          </p>
+          
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="text-lg px-8 py-6" asChild>
               <Link to="/marketplace">Shop Fresh Produce</Link>
@@ -71,7 +69,7 @@ const Index = () => {
               <div className="w-20 h-20 mx-auto rounded-full bg-harvest-orange flex items-center justify-center mb-4">
                 <TruckIcon className="w-10 h-10 text-white" />
               </div>
-              <h3 className="text-xl font-semibold text-foreground">Seamless Logistics</h3>
+              <h3 className="text-xl font-semibold text-foreground">Easy Logistics</h3>
               <p className="text-muted-foreground">
                 A BioBridge coordinator picks up items directly from the producer and delivers to your location.
               </p>
