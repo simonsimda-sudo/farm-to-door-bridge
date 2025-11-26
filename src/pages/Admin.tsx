@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { FarmManagement } from "@/components/admin/FarmManagement";
 import { ProductManagement } from "@/components/admin/ProductManagement";
 import { CategoryManagement } from "@/components/admin/CategoryManagement";
+import UserManagement from "@/components/admin/UserManagement";
 import { LogOut } from "lucide-react";
 
 export default function Admin() {
@@ -76,10 +77,11 @@ export default function Admin() {
 
       <main className="container mx-auto px-4 py-8">
         <Tabs defaultValue="farms" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="farms">Farms</TabsTrigger>
             <TabsTrigger value="products">Products</TabsTrigger>
             <TabsTrigger value="categories">Categories</TabsTrigger>
+            <TabsTrigger value="users">Users</TabsTrigger>
           </TabsList>
 
           <TabsContent value="farms" className="mt-6">
@@ -92,6 +94,10 @@ export default function Admin() {
 
           <TabsContent value="categories" className="mt-6">
             <CategoryManagement />
+          </TabsContent>
+
+          <TabsContent value="users" className="mt-6">
+            <UserManagement />
           </TabsContent>
         </Tabs>
       </main>
