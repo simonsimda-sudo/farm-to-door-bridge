@@ -29,7 +29,7 @@ const Index = () => {
             From Certified Organic Farms to Your Door
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-25">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-40">
             <Button size="lg" className="text-lg px-8 py-6" asChild>
               <Link to="/marketplace">Shop Fresh Produce</Link>
             </Button>
