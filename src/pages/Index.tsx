@@ -20,14 +20,20 @@ const Index = () => {
   };
   return <div className="min-h-screen">
       {/* Hero Section */}
-      <section style={{
+      <header style={{
       backgroundImage: "url(\"/lovable-uploads/092f2f9a-ca4b-42f3-911d-a6479eef63fb.png\")"
-    }} className="relative min-h-screen flex items-center justify-center bg-cover bg-center shadow-xl">
+    }} className="relative min-h-screen flex items-center justify-center bg-cover bg-center shadow-xl" role="banner">
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
         <div className="relative z-10 container mx-auto px-4 text-center">
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-2xl bg-inherit">BioBridge</h1>
+          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-2xl bg-inherit">
+            BioBridge – Certified Organic Produce Marketplace
+          </h1>
           <p className="text-2xl md:text-3xl text-white mb-4 drop-shadow-lg font-semibold">
             From Certified Organic Farms to Your Door
+          </p>
+          <p className="text-lg md:text-xl text-white/90 mb-8 drop-shadow-md max-w-3xl mx-auto">
+            Welcome to <strong>trybiobridge.com</strong>, where BioBridge connects you with local certified organic farms. 
+            Shop fresh, sustainable produce with complete transparency from farm to table.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-45">
@@ -39,10 +45,12 @@ const Index = () => {
             </Button>
           </div>
         </div>
-      </section>
+      </header>
 
-      {/* How It Works */}
-      <section id="how-it-works" ref={howItWorks.ref} className={`py-24 bg-card transition-all duration-1000 ${howItWorks.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
+      {/* Main Content */}
+      <main>
+        {/* How It Works */}
+        <section id="how-it-works" ref={howItWorks.ref} className={`py-24 bg-card transition-all duration-1000 ${howItWorks.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
         <div className="container mx-auto px-4">
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-foreground">How It Works</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -275,6 +283,7 @@ const Index = () => {
           </div>
         </div>
       </section>
+      </main>
 
       {/* Footer */}
       <footer className="bg-primary py-12">

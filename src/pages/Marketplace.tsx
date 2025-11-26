@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -76,8 +77,15 @@ const Marketplace = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Helmet>
+        <title>Organic Marketplace – Shop Fresh Produce | BioBridge</title>
+        <meta name="description" content="Shop certified organic produce from local farms at BioBridge marketplace. Fresh vegetables, fruits, and sustainable products delivered from farm to table. Visit trybiobridge.com" />
+        <meta property="og:title" content="Organic Marketplace – Shop Fresh Produce | BioBridge" />
+        <meta property="og:description" content="Shop certified organic produce from local farms at BioBridge marketplace. Fresh vegetables, fruits, and sustainable products delivered from farm to table." />
+      </Helmet>
+      
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60">
+      <header className="sticky top-0 z-50 border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60" role="banner">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <Link to="/" className="text-2xl font-bold text-primary">
             BioBridge
@@ -115,10 +123,13 @@ const Marketplace = () => {
             Fresh Organic Marketplace
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Discover hand-selected produce from certified farms.
+            Discover hand-selected produce from certified farms at trybiobridge.com
           </p>
         </div>
       </section>
+
+      {/* Main Content */}
+      <main>
 
       {/* Controls Bar */}
       <section className="py-6 border-b bg-card">
@@ -224,6 +235,7 @@ const Marketplace = () => {
           )}
         </div>
       </section>
+      </main>
 
       {/* Footer */}
       <footer className="bg-primary py-12 mt-12">
