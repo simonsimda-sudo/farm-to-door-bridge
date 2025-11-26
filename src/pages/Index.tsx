@@ -54,14 +54,11 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-foreground">How It Works</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div 
-              className="text-center space-y-4 transition-all duration-700"
-              style={{ 
-                opacity: howItWorks.isVisible ? 1 : 0, 
-                transform: howItWorks.isVisible ? 'translateY(0)' : 'translateY(20px)',
-                transitionDelay: howItWorks.isVisible ? '100ms' : '0ms'
-              }}
-            >
+            <div className="text-center space-y-4 transition-all duration-700" style={{
+              opacity: howItWorks.isVisible ? 1 : 0,
+              transform: howItWorks.isVisible ? 'translateY(0)' : 'translateY(20px)',
+              transitionDelay: howItWorks.isVisible ? '100ms' : '0ms'
+            }}>
               <div className="w-20 h-20 mx-auto rounded-full bg-primary flex items-center justify-center mb-4">
                 <ShieldCheck className="w-10 h-10 text-primary-foreground" />
               </div>
@@ -71,14 +68,11 @@ const Index = () => {
               </p>
             </div>
 
-            <div 
-              className="text-center space-y-4 transition-all duration-700"
-              style={{ 
-                opacity: howItWorks.isVisible ? 1 : 0, 
-                transform: howItWorks.isVisible ? 'translateY(0)' : 'translateY(20px)',
-                transitionDelay: howItWorks.isVisible ? '250ms' : '0ms'
-              }}
-            >
+            <div className="text-center space-y-4 transition-all duration-700" style={{
+              opacity: howItWorks.isVisible ? 1 : 0,
+              transform: howItWorks.isVisible ? 'translateY(0)' : 'translateY(20px)',
+              transitionDelay: howItWorks.isVisible ? '250ms' : '0ms'
+            }}>
               <div className="w-20 h-20 mx-auto rounded-full bg-organic-green flex items-center justify-center mb-4">
                 <Leaf className="w-10 h-10 text-white" />
               </div>
@@ -88,14 +82,11 @@ const Index = () => {
               </p>
             </div>
 
-            <div 
-              className="text-center space-y-4 transition-all duration-700"
-              style={{ 
-                opacity: howItWorks.isVisible ? 1 : 0, 
-                transform: howItWorks.isVisible ? 'translateY(0)' : 'translateY(20px)',
-                transitionDelay: howItWorks.isVisible ? '400ms' : '0ms'
-              }}
-            >
+            <div className="text-center space-y-4 transition-all duration-700" style={{
+              opacity: howItWorks.isVisible ? 1 : 0,
+              transform: howItWorks.isVisible ? 'translateY(0)' : 'translateY(20px)',
+              transitionDelay: howItWorks.isVisible ? '400ms' : '0ms'
+            }}>
               <div className="w-20 h-20 mx-auto rounded-full bg-harvest-orange flex items-center justify-center mb-4">
                 <TruckIcon className="w-10 h-10 text-white" />
               </div>
@@ -105,14 +96,11 @@ const Index = () => {
               </p>
             </div>
 
-            <div 
-              className="text-center space-y-4 transition-all duration-700"
-              style={{ 
-                opacity: howItWorks.isVisible ? 1 : 0, 
-                transform: howItWorks.isVisible ? 'translateY(0)' : 'translateY(20px)',
-                transitionDelay: howItWorks.isVisible ? '550ms' : '0ms'
-              }}
-            >
+            <div className="text-center space-y-4 transition-all duration-700" style={{
+              opacity: howItWorks.isVisible ? 1 : 0,
+              transform: howItWorks.isVisible ? 'translateY(0)' : 'translateY(20px)',
+              transitionDelay: howItWorks.isVisible ? '550ms' : '0ms'
+            }}>
               <div className="w-20 h-20 mx-auto rounded-full bg-fresh-green flex items-center justify-center mb-4">
                 <CheckCircle2 className="w-10 h-10 text-white" />
               </div>
@@ -128,14 +116,11 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-foreground">Why BioBridge</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <div 
-              className="bg-card p-8 rounded-lg shadow-sm border border-border transition-all duration-700"
-              style={{ 
-                opacity: whyBioBridge.isVisible ? 1 : 0, 
-                transform: whyBioBridge.isVisible ? 'translateY(0)' : 'translateY(20px)',
-                transitionDelay: whyBioBridge.isVisible ? '100ms' : '0ms'
-              }}
-            >
+            <div className="bg-card p-8 rounded-lg shadow-sm border border-border transition-all duration-700" style={{
+              opacity: whyBioBridge.isVisible ? 1 : 0,
+              transform: whyBioBridge.isVisible ? 'translateY(0)' : 'translateY(20px)',
+              transitionDelay: whyBioBridge.isVisible ? '100ms' : '0ms'
+            }}>
               <Sprout className="w-12 h-12 text-primary mb-4" />
               <h3 className="text-2xl font-semibold mb-3 text-foreground">Freshness You Can Taste</h3>
               <p className="text-muted-foreground">
@@ -143,66 +128,51 @@ const Index = () => {
               </p>
             </div>
 
-            <div 
-              className="bg-card p-8 rounded-lg shadow-sm border border-border transition-all duration-700"
-              style={{ 
-                opacity: whyBioBridge.isVisible ? 1 : 0, 
-                transform: whyBioBridge.isVisible ? 'translateY(0)' : 'translateY(20px)',
-                transitionDelay: whyBioBridge.isVisible ? '200ms' : '0ms'
-              }}
-            >
+            <div className="bg-card p-8 rounded-lg shadow-sm border border-border transition-all duration-700" style={{
+              opacity: whyBioBridge.isVisible ? 1 : 0,
+              transform: whyBioBridge.isVisible ? 'translateY(0)' : 'translateY(20px)',
+              transitionDelay: whyBioBridge.isVisible ? '200ms' : '0ms'
+            }}>
               <ShieldCheck className="w-12 h-12 text-primary mb-4" />
               <h3 className="text-2xl font-semibold mb-3 text-foreground">Full Transparency</h3>
               <p className="text-muted-foreground">Clear sourcing, methods, and producer stories for every item.</p>
             </div>
 
-            <div 
-              className="bg-card p-8 rounded-lg shadow-sm border border-border transition-all duration-700"
-              style={{ 
-                opacity: whyBioBridge.isVisible ? 1 : 0, 
-                transform: whyBioBridge.isVisible ? 'translateY(0)' : 'translateY(20px)',
-                transitionDelay: whyBioBridge.isVisible ? '300ms' : '0ms'
-              }}
-            >
+            <div className="bg-card p-8 rounded-lg shadow-sm border border-border transition-all duration-700" style={{
+              opacity: whyBioBridge.isVisible ? 1 : 0,
+              transform: whyBioBridge.isVisible ? 'translateY(0)' : 'translateY(20px)',
+              transitionDelay: whyBioBridge.isVisible ? '300ms' : '0ms'
+            }}>
               <CheckCircle2 className="w-12 h-12 text-primary mb-4" />
               <h3 className="text-2xl font-semibold mb-3 text-foreground">Exceptional Quality</h3>
               <p className="text-muted-foreground">A curated selection from trusted partners who share our values.</p>
             </div>
 
-            <div 
-              className="bg-card p-8 rounded-lg shadow-sm border border-border transition-all duration-700"
-              style={{ 
-                opacity: whyBioBridge.isVisible ? 1 : 0, 
-                transform: whyBioBridge.isVisible ? 'translateY(0)' : 'translateY(20px)',
-                transitionDelay: whyBioBridge.isVisible ? '400ms' : '0ms'
-              }}
-            >
+            <div className="bg-card p-8 rounded-lg shadow-sm border border-border transition-all duration-700" style={{
+              opacity: whyBioBridge.isVisible ? 1 : 0,
+              transform: whyBioBridge.isVisible ? 'translateY(0)' : 'translateY(20px)',
+              transitionDelay: whyBioBridge.isVisible ? '400ms' : '0ms'
+            }}>
               <Leaf className="w-12 h-12 text-primary mb-4" />
               <h3 className="text-2xl font-semibold mb-3 text-foreground">Sustainability in Practice</h3>
               <p className="text-muted-foreground">Support local, organic agriculture and responsible production.</p>
             </div>
 
-            <div 
-              className="bg-card p-8 rounded-lg shadow-sm border border-border transition-all duration-700"
-              style={{ 
-                opacity: whyBioBridge.isVisible ? 1 : 0, 
-                transform: whyBioBridge.isVisible ? 'translateY(0)' : 'translateY(20px)',
-                transitionDelay: whyBioBridge.isVisible ? '500ms' : '0ms'
-              }}
-            >
+            <div className="bg-card p-8 rounded-lg shadow-sm border border-border transition-all duration-700" style={{
+              opacity: whyBioBridge.isVisible ? 1 : 0,
+              transform: whyBioBridge.isVisible ? 'translateY(0)' : 'translateY(20px)',
+              transitionDelay: whyBioBridge.isVisible ? '500ms' : '0ms'
+            }}>
               <TruckIcon className="w-12 h-12 text-primary mb-4" />
               <h3 className="text-2xl font-semibold mb-3 text-foreground">Effortless Convenience</h3>
               <p className="text-muted-foreground">Premium products, delivered with care to your doorstep.</p>
             </div>
 
-            <div 
-              className="bg-card p-8 rounded-lg shadow-sm border border-border transition-all duration-700"
-              style={{ 
-                opacity: whyBioBridge.isVisible ? 1 : 0, 
-                transform: whyBioBridge.isVisible ? 'translateY(0)' : 'translateY(20px)',
-                transitionDelay: whyBioBridge.isVisible ? '600ms' : '0ms'
-              }}
-            >
+            <div className="bg-card p-8 rounded-lg shadow-sm border border-border transition-all duration-700" style={{
+              opacity: whyBioBridge.isVisible ? 1 : 0,
+              transform: whyBioBridge.isVisible ? 'translateY(0)' : 'translateY(20px)',
+              transitionDelay: whyBioBridge.isVisible ? '600ms' : '0ms'
+            }}>
               <Users className="w-12 h-12 text-primary mb-4" />
               <h3 className="text-2xl font-semibold mb-3 text-foreground">Community Connection</h3>
               <p className="text-muted-foreground">Build relationships with the farmers who grow your food.</p>
@@ -213,8 +183,8 @@ const Index = () => {
 
       {/* For Producers */}
       <section id="for-producers" ref={forProducers.ref} className={`py-24 bg-cover bg-center relative transition-all duration-1000 ${forProducers.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`} style={{
-      backgroundImage: `url(${farmImage})`
-    }}>
+        backgroundImage: `url(${farmImage})`
+      }}>
         <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/80" />
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl">
@@ -224,36 +194,27 @@ const Index = () => {
               your brand - while we support visibility, ordering, and last-mile logistics.
             </p>
             <div className="space-y-4 mb-10">
-              <div 
-                className="flex items-start gap-3 transition-all duration-700"
-                style={{ 
-                  opacity: forProducers.isVisible ? 1 : 0, 
-                  transform: forProducers.isVisible ? 'translateX(0)' : 'translateX(-20px)',
-                  transitionDelay: forProducers.isVisible ? '200ms' : '0ms'
-                }}
-              >
+              <div className="flex items-start gap-3 transition-all duration-700" style={{
+                opacity: forProducers.isVisible ? 1 : 0,
+                transform: forProducers.isVisible ? 'translateX(0)' : 'translateX(-20px)',
+                transitionDelay: forProducers.isVisible ? '200ms' : '0ms'
+              }}>
                 <CheckCircle2 className="w-6 h-6 text-fresh-green mt-1 flex-shrink-0" />
                 <p className="text-lg text-white">Reach customers who care about quality and origin</p>
               </div>
-              <div 
-                className="flex items-start gap-3 transition-all duration-700"
-                style={{ 
-                  opacity: forProducers.isVisible ? 1 : 0, 
-                  transform: forProducers.isVisible ? 'translateX(0)' : 'translateX(-20px)',
-                  transitionDelay: forProducers.isVisible ? '350ms' : '0ms'
-                }}
-              >
+              <div className="flex items-start gap-3 transition-all duration-700" style={{
+                opacity: forProducers.isVisible ? 1 : 0,
+                transform: forProducers.isVisible ? 'translateX(0)' : 'translateX(-20px)',
+                transitionDelay: forProducers.isVisible ? '350ms' : '0ms'
+              }}>
                 <CheckCircle2 className="w-6 h-6 text-fresh-green mt-1 flex-shrink-0" />
                 <p className="text-lg text-white">Present your farm story and methods with clarity</p>
               </div>
-              <div 
-                className="flex items-start gap-3 transition-all duration-700"
-                style={{ 
-                  opacity: forProducers.isVisible ? 1 : 0, 
-                  transform: forProducers.isVisible ? 'translateX(0)' : 'translateX(-20px)',
-                  transitionDelay: forProducers.isVisible ? '500ms' : '0ms'
-                }}
-              >
+              <div className="flex items-start gap-3 transition-all duration-700" style={{
+                opacity: forProducers.isVisible ? 1 : 0,
+                transform: forProducers.isVisible ? 'translateX(0)' : 'translateX(-20px)',
+                transitionDelay: forProducers.isVisible ? '500ms' : '0ms'
+              }}>
                 <CheckCircle2 className="w-6 h-6 text-fresh-green mt-1 flex-shrink-0" />
                 <p className="text-lg text-white">Let us simplify the operational overhead</p>
               </div>
@@ -269,10 +230,7 @@ const Index = () => {
       <section ref={ourDifference.ref} className={`py-24 bg-card transition-all duration-1000 ${ourDifference.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-8 text-foreground">Our Difference</h2>
-          <p className="text-xl text-muted-foreground max-w-4xl mx-auto mb-12">
-            We combine careful selection, transparent storytelling, and hands-on logistics to deliver organic food that
-            stands up to scrutiny—on taste, on quality, and on values.
-          </p>
+          <p className="text-xl text-muted-foreground max-w-4xl mx-auto mb-12">We combine careful selection, transparent storytelling, and hands-on logistics to deliver organic food you can truly trust - on taste, on quality, and on values.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="text-lg px-8 py-6" asChild>
               <Link to="/marketplace">Shop Fresh Produce</Link>
