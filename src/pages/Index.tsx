@@ -25,16 +25,11 @@ const Index = () => {
     }} className="relative min-h-screen flex items-center justify-center bg-cover bg-center shadow-xl" role="banner">
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
         <div className="relative z-10 container mx-auto px-4 text-center">
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-2xl bg-inherit">
-            BioBridge – Certified Organic Produce Marketplace
-          </h1>
+          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-2xl bg-inherit">BioBridge </h1>
           <p className="text-2xl md:text-3xl text-white mb-4 drop-shadow-lg font-semibold">
             From Certified Organic Farms to Your Door
           </p>
-          <p className="text-lg md:text-xl text-white/90 mb-8 drop-shadow-md max-w-3xl mx-auto">
-            Welcome to <strong>trybiobridge.com</strong>, where BioBridge connects you with local certified organic farms. 
-            Shop fresh, sustainable produce with complete transparency from farm to table.
-          </p>
+          
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-45">
             <Button size="lg" className="text-lg px-8 py-6" asChild>
