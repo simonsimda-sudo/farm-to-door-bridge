@@ -12,7 +12,7 @@ const Index = () => {
   const whyBioBridge = useScrollAnimation();
   const forProducers = useScrollAnimation();
   const ourDifference = useScrollAnimation();
-  
+
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     element?.scrollIntoView({
@@ -35,7 +35,7 @@ const Index = () => {
             From Certified Organic Farms to Your Door
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-40">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-45">
             <Button size="lg" className="text-lg px-8 py-6" asChild>
               <Link to="/marketplace">Shop Fresh Produce</Link>
             </Button>
@@ -52,8 +52,8 @@ const Index = () => {
       </section>
 
       {/* How It Works */}
-      <section 
-        id="how-it-works" 
+      <section
+        id="how-it-works"
         ref={howItWorks.ref}
         className={`py-24 bg-card transition-all duration-1000 ${
           howItWorks.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
@@ -104,8 +104,8 @@ const Index = () => {
       </section>
 
       {/* Why BioBridge */}
-      <section 
-        id="why-biobridge" 
+      <section
+        id="why-biobridge"
         ref={whyBioBridge.ref}
         className={`py-24 bg-secondary/30 transition-all duration-1000 ${
           whyBioBridge.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
@@ -196,7 +196,7 @@ const Index = () => {
       </section>
 
       {/* Our Difference */}
-      <section 
+      <section
         ref={ourDifference.ref}
         className={`py-24 bg-card transition-all duration-1000 ${
           ourDifference.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
