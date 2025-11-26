@@ -10,28 +10,35 @@ const Index = () => {
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     element?.scrollIntoView({
-      behavior: "smooth"
+      behavior: "smooth",
     });
   };
-  return <div className="min-h-screen">
+  return (
+    <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center bg-cover bg-center" style={{
-      backgroundImage: `url(${heroImage})`
-    }}>
+      <section
+        className="relative min-h-screen flex items-center justify-center bg-cover bg-center"
+        style={{
+          backgroundImage: `url(${heroImage})`,
+        }}
+      >
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
         <div className="relative z-10 container mx-auto px-4 text-center">
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-2xl">
-            BioBridge
-          </h1>
+          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-2xl">BioBridge</h1>
           <p className="text-2xl md:text-3xl text-white mb-4 drop-shadow-lg">
             From Certified Organic Farms to Your Door
           </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-16">
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-20">
             <Button size="lg" className="text-lg px-8 py-6" asChild>
               <Link to="/marketplace">Shop Fresh Produce</Link>
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8 py-6 bg-white/90 hover:bg-white border-2" onClick={() => setFormOpen(true)}>
+            <Button
+              size="lg"
+              variant="outline"
+              className="text-lg px-8 py-6 bg-white/90 hover:bg-white border-2"
+              onClick={() => setFormOpen(true)}
+            >
               Join as a Producer
             </Button>
           </div>
@@ -41,9 +48,7 @@ const Index = () => {
       {/* How It Works */}
       <section id="how-it-works" className="py-24 bg-card">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-foreground">
-            How It Works
-          </h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-foreground">How It Works</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="text-center space-y-4">
               <div className="w-20 h-20 mx-auto rounded-full bg-primary flex items-center justify-center mb-4">
@@ -80,9 +85,7 @@ const Index = () => {
                 <CheckCircle2 className="w-10 h-10 text-white" />
               </div>
               <h3 className="text-xl font-semibold text-foreground">Fresh, Reliable Delivery</h3>
-              <p className="text-muted-foreground">
-                Farm-level freshness with the convenience of modern commerce.
-              </p>
+              <p className="text-muted-foreground">Farm-level freshness with the convenience of modern commerce.</p>
             </div>
           </div>
         </div>
@@ -91,14 +94,14 @@ const Index = () => {
       {/* Why BioBridge */}
       <section id="why-biobridge" className="py-24 bg-secondary/30">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-foreground">
-            Why BioBridge
-          </h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-foreground">Why BioBridge</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
             <div className="bg-card p-8 rounded-lg shadow-sm border border-border">
               <Sprout className="w-12 h-12 text-primary mb-4" />
               <h3 className="text-2xl font-semibold mb-3 text-foreground">Freshness You Can Taste</h3>
-              <p className="text-muted-foreground">Shorter time from harvest to plate means peak flavor and nutrition.</p>
+              <p className="text-muted-foreground">
+                Shorter time from harvest to plate means peak flavor and nutrition.
+              </p>
             </div>
 
             <div className="bg-card p-8 rounded-lg shadow-sm border border-border">
@@ -135,16 +138,21 @@ const Index = () => {
       </section>
 
       {/* For Producers */}
-      <section id="for-producers" className="py-24 bg-cover bg-center relative" style={{
-      backgroundImage: `url(${farmImage})`
-    }}>
+      <section
+        id="for-producers"
+        className="py-24 bg-cover bg-center relative"
+        style={{
+          backgroundImage: `url(${farmImage})`,
+        }}
+      >
         <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/80" />
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-              For Producers
-            </h2>
-            <p className="text-xl text-white/90 mb-8">Join a network that values quality and integrity. BioBridge highlights your products, your practices, and your brand - while we support visibility, ordering, and last-mile logistics.</p>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">For Producers</h2>
+            <p className="text-xl text-white/90 mb-8">
+              Join a network that values quality and integrity. BioBridge highlights your products, your practices, and
+              your brand - while we support visibility, ordering, and last-mile logistics.
+            </p>
             <div className="space-y-4 mb-10">
               <div className="flex items-start gap-3">
                 <CheckCircle2 className="w-6 h-6 text-fresh-green mt-1 flex-shrink-0" />
@@ -169,11 +177,10 @@ const Index = () => {
       {/* Our Difference */}
       <section className="py-24 bg-card">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-8 text-foreground">
-            Our Difference
-          </h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-8 text-foreground">Our Difference</h2>
           <p className="text-xl text-muted-foreground max-w-4xl mx-auto mb-12">
-            We combine careful selection, transparent storytelling, and hands-on logistics to deliver organic food that stands up to scrutiny—on taste, on quality, and on values.
+            We combine careful selection, transparent storytelling, and hands-on logistics to deliver organic food that
+            stands up to scrutiny—on taste, on quality, and on values.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="text-lg px-8 py-6" asChild>
@@ -195,13 +202,22 @@ const Index = () => {
               <p className="text-primary-foreground/80">From Certified Organic Farms to Your Door</p>
             </div>
             <div className="flex gap-8 text-primary-foreground/80">
-              <button onClick={() => scrollToSection("how-it-works")} className="hover:text-primary-foreground transition-colors">
+              <button
+                onClick={() => scrollToSection("how-it-works")}
+                className="hover:text-primary-foreground transition-colors"
+              >
                 How It Works
               </button>
-              <button onClick={() => scrollToSection("why-biobridge")} className="hover:text-primary-foreground transition-colors">
+              <button
+                onClick={() => scrollToSection("why-biobridge")}
+                className="hover:text-primary-foreground transition-colors"
+              >
                 Why BioBridge
               </button>
-              <button onClick={() => scrollToSection("for-producers")} className="hover:text-primary-foreground transition-colors">
+              <button
+                onClick={() => scrollToSection("for-producers")}
+                className="hover:text-primary-foreground transition-colors"
+              >
                 For Producers
               </button>
               <Link to="/auth" className="hover:text-primary-foreground transition-colors">
@@ -216,6 +232,7 @@ const Index = () => {
       </footer>
 
       <ProducerForm open={formOpen} onOpenChange={setFormOpen} />
-    </div>;
+    </div>
+  );
 };
 export default Index;
