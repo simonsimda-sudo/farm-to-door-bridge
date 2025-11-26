@@ -12,22 +12,17 @@ const Index = () => {
   const whyBioBridge = useScrollAnimation();
   const forProducers = useScrollAnimation();
   const ourDifference = useScrollAnimation();
-
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     element?.scrollIntoView({
-      behavior: "smooth",
+      behavior: "smooth"
     });
   };
-  return (
-    <div className="min-h-screen">
+  return <div className="min-h-screen">
       {/* Hero Section */}
-      <section
-        className="relative min-h-screen flex items-center justify-center bg-cover bg-center"
-        style={{
-          backgroundImage: `url(${heroImage})`,
-        }}
-      >
+      <section className="relative min-h-screen flex items-center justify-center bg-cover bg-center" style={{
+      backgroundImage: `url(${heroImage})`
+    }}>
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
         <div className="relative z-10 container mx-auto px-4 text-center">
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-2xl">BioBridge</h1>
@@ -37,14 +32,9 @@ const Index = () => {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-45">
             <Button size="lg" className="text-lg px-8 py-6" asChild>
-              <Link to="/marketplace">Shop Fresh Produce</Link>
+              <Link to="/marketplace">Shop Fresh Products</Link>
             </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="text-lg px-8 py-6 bg-white/90 hover:bg-white border-2"
-              onClick={() => setFormOpen(true)}
-            >
+            <Button size="lg" variant="outline" className="text-lg px-8 py-6 bg-white/90 hover:bg-white border-2" onClick={() => setFormOpen(true)}>
               Join as a Producer
             </Button>
           </div>
@@ -52,13 +42,7 @@ const Index = () => {
       </section>
 
       {/* How It Works */}
-      <section
-        id="how-it-works"
-        ref={howItWorks.ref}
-        className={`py-24 bg-card transition-all duration-1000 ${
-          howItWorks.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-        }`}
-      >
+      <section id="how-it-works" ref={howItWorks.ref} className={`py-24 bg-card transition-all duration-1000 ${howItWorks.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
         <div className="container mx-auto px-4">
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-foreground">How It Works</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -104,13 +88,7 @@ const Index = () => {
       </section>
 
       {/* Why BioBridge */}
-      <section
-        id="why-biobridge"
-        ref={whyBioBridge.ref}
-        className={`py-24 bg-secondary/30 transition-all duration-1000 ${
-          whyBioBridge.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-        }`}
-      >
+      <section id="why-biobridge" ref={whyBioBridge.ref} className={`py-24 bg-secondary/30 transition-all duration-1000 ${whyBioBridge.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
         <div className="container mx-auto px-4">
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-foreground">Why BioBridge</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -156,16 +134,9 @@ const Index = () => {
       </section>
 
       {/* For Producers */}
-      <section
-        id="for-producers"
-        ref={forProducers.ref}
-        className={`py-24 bg-cover bg-center relative transition-all duration-1000 ${
-          forProducers.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-        }`}
-        style={{
-          backgroundImage: `url(${farmImage})`,
-        }}
-      >
+      <section id="for-producers" ref={forProducers.ref} className={`py-24 bg-cover bg-center relative transition-all duration-1000 ${forProducers.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`} style={{
+      backgroundImage: `url(${farmImage})`
+    }}>
         <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/80" />
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl">
@@ -196,12 +167,7 @@ const Index = () => {
       </section>
 
       {/* Our Difference */}
-      <section
-        ref={ourDifference.ref}
-        className={`py-24 bg-card transition-all duration-1000 ${
-          ourDifference.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-        }`}
-      >
+      <section ref={ourDifference.ref} className={`py-24 bg-card transition-all duration-1000 ${ourDifference.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-8 text-foreground">Our Difference</h2>
           <p className="text-xl text-muted-foreground max-w-4xl mx-auto mb-12">
@@ -228,22 +194,13 @@ const Index = () => {
               <p className="text-primary-foreground/80">From Certified Organic Farms to Your Door</p>
             </div>
             <div className="flex gap-8 text-primary-foreground/80">
-              <button
-                onClick={() => scrollToSection("how-it-works")}
-                className="hover:text-primary-foreground transition-colors"
-              >
+              <button onClick={() => scrollToSection("how-it-works")} className="hover:text-primary-foreground transition-colors">
                 How It Works
               </button>
-              <button
-                onClick={() => scrollToSection("why-biobridge")}
-                className="hover:text-primary-foreground transition-colors"
-              >
+              <button onClick={() => scrollToSection("why-biobridge")} className="hover:text-primary-foreground transition-colors">
                 Why BioBridge
               </button>
-              <button
-                onClick={() => scrollToSection("for-producers")}
-                className="hover:text-primary-foreground transition-colors"
-              >
+              <button onClick={() => scrollToSection("for-producers")} className="hover:text-primary-foreground transition-colors">
                 For Producers
               </button>
               <Link to="/auth" className="hover:text-primary-foreground transition-colors">
@@ -258,7 +215,6 @@ const Index = () => {
       </footer>
 
       <ProducerForm open={formOpen} onOpenChange={setFormOpen} />
-    </div>
-  );
+    </div>;
 };
 export default Index;
