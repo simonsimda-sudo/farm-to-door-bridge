@@ -5,8 +5,14 @@ import { Leaf, TruckIcon, Users, CheckCircle2, Sprout, ShieldCheck } from "lucid
 import { Link } from "react-router-dom";
 import heroImage from "@/assets/hero-organic-produce.jpg";
 import farmImage from "@/assets/farm-landscape.jpg";
+import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 const Index = () => {
   const [formOpen, setFormOpen] = useState(false);
+  const howItWorks = useScrollAnimation();
+  const whyBioBridge = useScrollAnimation();
+  const forProducers = useScrollAnimation();
+  const ourDifference = useScrollAnimation();
+  
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     element?.scrollIntoView({
@@ -46,7 +52,13 @@ const Index = () => {
       </section>
 
       {/* How It Works */}
-      <section id="how-it-works" className="py-24 bg-card">
+      <section 
+        id="how-it-works" 
+        ref={howItWorks.ref}
+        className={`py-24 bg-card transition-all duration-1000 ${
+          howItWorks.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+        }`}
+      >
         <div className="container mx-auto px-4">
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-foreground">How It Works</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -92,7 +104,13 @@ const Index = () => {
       </section>
 
       {/* Why BioBridge */}
-      <section id="why-biobridge" className="py-24 bg-secondary/30">
+      <section 
+        id="why-biobridge" 
+        ref={whyBioBridge.ref}
+        className={`py-24 bg-secondary/30 transition-all duration-1000 ${
+          whyBioBridge.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+        }`}
+      >
         <div className="container mx-auto px-4">
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-foreground">Why BioBridge</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -140,7 +158,10 @@ const Index = () => {
       {/* For Producers */}
       <section
         id="for-producers"
-        className="py-24 bg-cover bg-center relative"
+        ref={forProducers.ref}
+        className={`py-24 bg-cover bg-center relative transition-all duration-1000 ${
+          forProducers.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+        }`}
         style={{
           backgroundImage: `url(${farmImage})`,
         }}
@@ -175,7 +196,12 @@ const Index = () => {
       </section>
 
       {/* Our Difference */}
-      <section className="py-24 bg-card">
+      <section 
+        ref={ourDifference.ref}
+        className={`py-24 bg-card transition-all duration-1000 ${
+          ourDifference.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+        }`}
+      >
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-8 text-foreground">Our Difference</h2>
           <p className="text-xl text-muted-foreground max-w-4xl mx-auto mb-12">
