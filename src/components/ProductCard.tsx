@@ -42,7 +42,7 @@ export const ProductCard = ({ product, onViewFarm }: ProductCardProps) => {
         <AspectRatio ratio={4 / 3}>
           <img
             src={product.image}
-            alt={product.name}
+            alt={`${product.name} - ${product.certification} from ${product.farm} in ${product.region}`}
             className="object-cover w-full h-full bg-muted"
           />
         </AspectRatio>
