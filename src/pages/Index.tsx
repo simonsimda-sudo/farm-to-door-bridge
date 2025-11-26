@@ -22,7 +22,7 @@ const Index = () => {
       {/* Hero Section */}
       <section style={{
       backgroundImage: "url(\"/lovable-uploads/092f2f9a-ca4b-42f3-911d-a6479eef63fb.png\")"
-    }} className="relative min-h-screen flex items-center justify-center bg-cover bg-center">
+    }} className="relative min-h-screen flex items-center justify-center bg-cover bg-center shadow-xl">
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
         <div className="relative z-10 container mx-auto px-4 text-center">
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-2xl bg-inherit">BioBridge</h1>
