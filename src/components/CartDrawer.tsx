@@ -11,7 +11,7 @@ import { useCart } from '@/contexts/CartContext';
 import { useNavigate } from 'react-router-dom';
 
 export const CartDrawer = () => {
-  const { items, updateQuantity, removeItem, totalItems, subtotal } = useCart();
+  const { items, updateQuantity, removeItem, totalItems, subtotal, deliveryFee, total, freeDeliveryThreshold } = useCart();
   const navigate = useNavigate();
 
   return (
@@ -93,10 +93,27 @@ export const CartDrawer = () => {
               ))}
             </div>
             
-            <div className="border-t border-border pt-4 mt-4 space-y-4 bg-background">
-              <div className="flex justify-between text-lg font-semibold">
-                <span>Subtotal</span>
-                <span>€{subtotal.toFixed(2)}</span>
+            <div className="border-t border-border pt-4 mt-4 space-y-3 bg-background">
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>Subtotal</span>
+                  <span>€{subtotal.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span>Delivery Fee</span>
+                  <span className={deliveryFee === 0 ? 'text-green-600 font-medium' : ''}>
+                    {deliveryFee === 0 ? 'FREE' : `€${deliveryFee.toFixed(2)}`}
+                  </span>
+                </div>
+                {deliveryFee > 0 && subtotal < freeDeliveryThreshold && (
+                  <p className="text-xs text-muted-foreground">
+                    Add €{(freeDeliveryThreshold - subtotal).toFixed(2)} more for free delivery
+                  </p>
+                )}
+                <div className="flex justify-between text-lg font-bold border-t border-border pt-2">
+                  <span>Total</span>
+                  <span>€{total.toFixed(2)}</span>
+                </div>
               </div>
               <Button
                 className="w-full"

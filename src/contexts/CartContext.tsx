@@ -19,6 +19,9 @@ interface CartContextType {
   clearCart: () => void;
   totalItems: number;
   subtotal: number;
+  deliveryFee: number;
+  total: number;
+  freeDeliveryThreshold: number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -67,10 +70,27 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  
+  // Delivery fee logic: €4.99 standard, free over €50
+  const freeDeliveryThreshold = 50;
+  const standardDeliveryFee = 4.99;
+  const deliveryFee = subtotal >= freeDeliveryThreshold ? 0 : standardDeliveryFee;
+  const total = subtotal + deliveryFee;
 
   return (
     <CartContext.Provider
-      value={{ items, addItem, removeItem, updateQuantity, clearCart, totalItems, subtotal }}
+      value={{ 
+        items, 
+        addItem, 
+        removeItem, 
+        updateQuantity, 
+        clearCart, 
+        totalItems, 
+        subtotal,
+        deliveryFee,
+        total,
+        freeDeliveryThreshold
+      }}
     >
       {children}
     </CartContext.Provider>
