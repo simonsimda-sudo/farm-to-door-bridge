@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/select";
 import { ProductCard } from "@/components/ProductCard";
 import { FarmProfileDialog } from "@/components/FarmProfileDialog";
+import { CartDrawer } from "@/components/CartDrawer";
 import { Link } from "react-router-dom";
 import { ProducerForm } from "@/components/ProducerForm";
 import { supabase } from "@/integrations/supabase/client";
@@ -101,7 +102,10 @@ const Marketplace = () => {
               For Producers
             </Link>
           </nav>
-          <Button onClick={() => setFormOpen(true)}>Join as a Producer</Button>
+          <div className="flex items-center gap-2">
+            <CartDrawer />
+            <Button onClick={() => setFormOpen(true)}>Join as a Producer</Button>
+          </div>
         </div>
       </header>
 

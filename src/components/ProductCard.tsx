@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -7,14 +8,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { ShieldCheck, MapPin, TruckIcon } from "lucide-react";
+import { ShieldCheck, MapPin, TruckIcon, Plus, Minus, ShoppingCart } from "lucide-react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { useCart } from "@/contexts/CartContext";
+import { toast } from "@/hooks/use-toast";
 
 interface Product {
   id: string;
@@ -36,6 +33,29 @@ interface ProductCardProps {
 }
 
 export const ProductCard = ({ product, onViewFarm }: ProductCardProps) => {
+  const [quantity, setQuantity] = useState(1);
+  const { addItem } = useCart();
+
+  const priceNumber = parseFloat(product.price.replace('€', ''));
+
+  const handleAddToCart = () => {
+    addItem({
+      id: product.id,
+      productId: product.id,
+      name: product.name,
+      farm: product.farm,
+      price: priceNumber,
+      unit: product.unit,
+      quantity,
+      image: product.image,
+    });
+    toast({
+      title: "Added to cart",
+      description: `${quantity} ${product.unit} of ${product.name} added to your cart`,
+    });
+    setQuantity(1);
+  };
+
   return (
     <Card className="group overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
       <CardHeader className="p-0">
@@ -72,29 +92,42 @@ export const ProductCard = ({ product, onViewFarm }: ProductCardProps) => {
         </div>
 
         {/* Price */}
-        <div className="text-2xl font-bold text-foreground">
+        <div className="text-2xl font-bold text-foreground mb-4">
           {product.price}
           <span className="text-sm font-normal text-muted-foreground">
             {" "}
             / {product.unit}
           </span>
         </div>
+
+        {/* Quantity Selector */}
+        <div className="flex items-center gap-2 mb-3">
+          <div className="flex items-center border border-border rounded-md">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9"
+              onClick={() => setQuantity(Math.max(1, quantity - 1))}
+            >
+              <Minus className="h-4 w-4" />
+            </Button>
+            <span className="px-3 font-medium min-w-[3ch] text-center">{quantity}</span>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9"
+              onClick={() => setQuantity(quantity + 1)}
+            >
+              <Plus className="h-4 w-4" />
+            </Button>
+          </div>
+          <Button className="flex-1" onClick={handleAddToCart}>
+            <ShoppingCart className="h-4 w-4" />
+            Add to Cart
+          </Button>
+        </div>
       </CardContent>
-      <CardFooter className="p-4 pt-0 flex flex-col gap-2">
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div className="w-full">
-                <Button className="w-full" disabled>
-                  Add to Basket
-                </Button>
-              </div>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Coming soon</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+      <CardFooter className="p-4 pt-0">
         <Button
           variant="secondary"
           className="w-full"

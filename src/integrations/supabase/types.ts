@@ -126,6 +126,117 @@ export type Database = {
         }
         Relationships: []
       }
+      order_items: {
+        Row: {
+          created_at: string
+          farm_name: string
+          id: string
+          line_total: number
+          order_id: string
+          product_id: string
+          product_name: string
+          quantity: number
+          unit: string
+          unit_price: number
+        }
+        Insert: {
+          created_at?: string
+          farm_name: string
+          id?: string
+          line_total: number
+          order_id: string
+          product_id: string
+          product_name: string
+          quantity: number
+          unit: string
+          unit_price: number
+        }
+        Update: {
+          created_at?: string
+          farm_name?: string
+          id?: string
+          line_total?: number
+          order_id?: string
+          product_id?: string
+          product_name?: string
+          quantity?: number
+          unit?: string
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          created_at: string
+          customer_email: string
+          customer_first_name: string
+          customer_last_name: string
+          customer_phone: string
+          delivery_city: string
+          delivery_country: string
+          delivery_date: string
+          delivery_notes: string | null
+          delivery_postal_code: string
+          delivery_street: string
+          delivery_time_slot: string | null
+          id: string
+          order_status: Database["public"]["Enums"]["order_status"]
+          total_amount: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          customer_email: string
+          customer_first_name: string
+          customer_last_name: string
+          customer_phone: string
+          delivery_city: string
+          delivery_country: string
+          delivery_date: string
+          delivery_notes?: string | null
+          delivery_postal_code: string
+          delivery_street: string
+          delivery_time_slot?: string | null
+          id?: string
+          order_status?: Database["public"]["Enums"]["order_status"]
+          total_amount: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          customer_email?: string
+          customer_first_name?: string
+          customer_last_name?: string
+          customer_phone?: string
+          delivery_city?: string
+          delivery_country?: string
+          delivery_date?: string
+          delivery_notes?: string | null
+          delivery_postal_code?: string
+          delivery_street?: string
+          delivery_time_slot?: string | null
+          id?: string
+          order_status?: Database["public"]["Enums"]["order_status"]
+          total_amount?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       products: {
         Row: {
           category_id: string | null
@@ -225,6 +336,12 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "user"
+      order_status:
+        | "new"
+        | "confirmed"
+        | "in_delivery"
+        | "delivered"
+        | "cancelled"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -353,6 +470,13 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user"],
+      order_status: [
+        "new",
+        "confirmed",
+        "in_delivery",
+        "delivered",
+        "cancelled",
+      ],
     },
   },
 } as const
