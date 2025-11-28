@@ -61,7 +61,7 @@ const TIME_SLOTS = ['9:00 – 12:00', '12:00 – 15:00', '15:00 – 18:00'];
 
 export default function Checkout() {
   const navigate = useNavigate();
-  const { items, subtotal, clearCart } = useCart();
+  const { items, subtotal, deliveryFee, total, clearCart } = useCart();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<FormData>({
@@ -129,7 +129,7 @@ export default function Checkout() {
           delivery_date: format(data.deliveryDate, 'yyyy-MM-dd'),
           delivery_time_slot: data.timeSlot || null,
           order_status: 'new',
-          total_amount: subtotal,
+          total_amount: total,
         })
         .select()
         .single();
@@ -468,13 +468,15 @@ export default function Checkout() {
                     <span>Subtotal</span>
                     <span className="font-medium">€{subtotal.toFixed(2)}</span>
                   </div>
-                  <div className="flex justify-between text-sm text-muted-foreground">
-                    <span>Delivery fee</span>
-                    <span>Calculated at delivery</span>
+                  <div className="flex justify-between">
+                    <span>Delivery Fee</span>
+                    <span className={`font-medium ${deliveryFee === 0 ? 'text-green-600' : ''}`}>
+                      {deliveryFee === 0 ? 'FREE' : `€${deliveryFee.toFixed(2)}`}
+                    </span>
                   </div>
                   <div className="border-t border-border pt-2 flex justify-between text-lg font-bold">
                     <span>Total</span>
-                    <span>€{subtotal.toFixed(2)}</span>
+                    <span>€{total.toFixed(2)}</span>
                   </div>
                 </div>
               </div>
