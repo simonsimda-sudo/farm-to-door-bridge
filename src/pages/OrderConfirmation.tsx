@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -31,22 +31,43 @@ interface OrderDetails {
 
 export default function OrderConfirmation() {
   const { orderId } = useParams();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [order, setOrder] = useState<OrderDetails | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchOrder = async () => {
-      if (!orderId) return;
+      if (!orderId) {
+        setError('No order ID provided');
+        setLoading(false);
+        return;
+      }
+
+      // Get confirmation token from URL
+      const token = searchParams.get('token');
+      
+      if (!token) {
+        setError('Invalid order access link');
+        setLoading(false);
+        return;
+      }
 
       try {
+        // Fetch order with confirmation token validation
         const { data: orderData, error: orderError } = await supabase
           .from('orders')
           .select('*')
           .eq('id', orderId)
+          .eq('confirmation_token', token)
           .single();
 
-        if (orderError) throw orderError;
+        if (orderError || !orderData) {
+          setError('Order not found or access denied');
+          setLoading(false);
+          return;
+        }
 
         const { data: itemsData, error: itemsError } = await supabase
           .from('order_items')
@@ -57,17 +78,18 @@ export default function OrderConfirmation() {
 
         setOrder({
           ...orderData,
-          order_items: itemsData,
+          order_items: itemsData || [],
         });
-      } catch (error) {
-        console.error('Error fetching order:', error);
+      } catch (err) {
+        console.error('Error fetching order:', err);
+        setError('Failed to load order details');
       } finally {
         setLoading(false);
       }
     };
 
     fetchOrder();
-  }, [orderId]);
+  }, [orderId, searchParams]);
 
   if (loading) {
     return (
@@ -77,11 +99,16 @@ export default function OrderConfirmation() {
     );
   }
 
-  if (!order) {
+  if (error || !order) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Order not found</h1>
+          <h1 className="text-2xl font-bold mb-4">
+            {error || 'Order not found'}
+          </h1>
+          <p className="text-muted-foreground mb-4">
+            Please check your order confirmation email for the correct link.
+          </p>
           <Button onClick={() => navigate('/marketplace')}>
             Back to Marketplace
           </Button>
