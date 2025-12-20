@@ -55,29 +55,30 @@ export default function OrderConfirmation() {
       }
 
       try {
-        // Fetch order with confirmation token validation
+        // Fetch order using secure RPC function that validates both order_id AND confirmation_token
         const { data: orderData, error: orderError } = await supabase
-          .from('orders')
-          .select('*')
-          .eq('id', orderId)
-          .eq('confirmation_token', token)
-          .single();
+          .rpc('get_order_by_token', {
+            _order_id: orderId,
+            _confirmation_token: token
+          });
 
-        if (orderError || !orderData) {
+        if (orderError || !orderData || orderData.length === 0) {
           setError('Order not found or access denied');
           setLoading(false);
           return;
         }
 
+        // Fetch order items using secure RPC function
         const { data: itemsData, error: itemsError } = await supabase
-          .from('order_items')
-          .select('*')
-          .eq('order_id', orderId);
+          .rpc('get_order_items_by_token', {
+            _order_id: orderId,
+            _confirmation_token: token
+          });
 
         if (itemsError) throw itemsError;
 
         setOrder({
-          ...orderData,
+          ...orderData[0],
           order_items: itemsData || [],
         });
       } catch (err) {

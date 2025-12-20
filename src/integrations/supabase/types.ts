@@ -329,6 +329,38 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_order_by_token: {
+        Args: { _confirmation_token: string; _order_id: string }
+        Returns: {
+          created_at: string
+          customer_email: string
+          customer_first_name: string
+          customer_last_name: string
+          customer_phone: string
+          delivery_city: string
+          delivery_country: string
+          delivery_date: string
+          delivery_notes: string
+          delivery_postal_code: string
+          delivery_street: string
+          delivery_time_slot: string
+          id: string
+          order_status: Database["public"]["Enums"]["order_status"]
+          total_amount: number
+        }[]
+      }
+      get_order_items_by_token: {
+        Args: { _confirmation_token: string; _order_id: string }
+        Returns: {
+          farm_name: string
+          id: string
+          line_total: number
+          product_name: string
+          quantity: number
+          unit: string
+          unit_price: number
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
