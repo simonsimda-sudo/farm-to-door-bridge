@@ -16,8 +16,47 @@ serve(async (req) => {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     
-    // Create admin client to access auth.users
+    // Create admin client
     const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
+
+    // AUTHORIZATION CHECK: Verify the caller is an authenticated admin
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      console.error('Missing authorization header');
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized: Missing authorization header' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 401 }
+      );
+    }
+
+    const token = authHeader.replace('Bearer ', '');
+    const { data: { user }, error: userError } = await supabaseAdmin.auth.getUser(token);
+    
+    if (userError || !user) {
+      console.error('Invalid or expired token:', userError?.message);
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized: Invalid or expired token' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 401 }
+      );
+    }
+
+    // Check if the authenticated user has admin role
+    const { data: adminRole, error: roleError } = await supabaseAdmin
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', user.id)
+      .eq('role', 'admin')
+      .maybeSingle();
+
+    if (roleError || !adminRole) {
+      console.error('Admin access required. User:', user.id);
+      return new Response(
+        JSON.stringify({ error: 'Forbidden: Admin access required' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 403 }
+      );
+    }
+
+    console.log('Admin access granted for user:', user.id);
 
     // Get all users from auth.users
     const { data: { users }, error: usersError } = await supabaseAdmin.auth.admin.listUsers();
@@ -48,7 +87,7 @@ serve(async (req) => {
       };
     });
 
-    console.log(`Successfully fetched ${usersWithRoles.length} users`);
+    console.log(`Successfully fetched ${usersWithRoles.length} users for admin ${user.id}`);
 
     return new Response(
       JSON.stringify({ users: usersWithRoles }),
