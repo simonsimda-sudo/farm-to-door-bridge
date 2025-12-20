@@ -113,7 +113,10 @@ export default function Checkout() {
     setIsSubmitting(true);
 
     try {
-      // Create order
+      // Generate confirmation token for secure order viewing
+      const confirmationToken = crypto.randomUUID();
+      
+      // Create order with confirmation token
       const { data: order, error: orderError } = await supabase
         .from('orders')
         .insert({
@@ -130,6 +133,7 @@ export default function Checkout() {
           delivery_time_slot: data.timeSlot || null,
           order_status: 'new',
           total_amount: total,
+          confirmation_token: confirmationToken,
         })
         .select()
         .single();
@@ -154,9 +158,9 @@ export default function Checkout() {
 
       if (itemsError) throw itemsError;
 
-      // Clear cart and navigate to confirmation
+      // Clear cart and navigate to confirmation with token
       clearCart();
-      navigate(`/order-confirmation/${order.id}`);
+      navigate(`/order-confirmation/${order.id}?token=${confirmationToken}`);
       
       toast({
         title: 'Order placed successfully!',
