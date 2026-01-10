@@ -126,6 +126,7 @@ export const de: TranslationKeys = {
     priceHighLow: "Preis: Hoch → Niedrig",
     loadingProducts: "Produkte werden geladen...",
     noProducts: "Noch keine Produkte verfügbar. Schauen Sie bald wieder vorbei!",
+    noFilteredProducts: "Keine Produkte entsprechen Ihren Suchkriterien.",
     showingProducts: "{{count}} Produkt wird angezeigt",
     showingProducts_plural: "{{count}} Produkte werden angezeigt",
     errorLoading: "Fehler beim Laden der Produkte",
