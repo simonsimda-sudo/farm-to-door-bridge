@@ -124,6 +124,7 @@ export const en = {
     priceHighLow: "Price: High → Low",
     loadingProducts: "Loading products...",
     noProducts: "No products available yet. Check back soon!",
+    noFilteredProducts: "No products match your search criteria.",
     showingProducts: "Showing {{count}} product",
     showingProducts_plural: "Showing {{count}} products",
     errorLoading: "Error loading products",

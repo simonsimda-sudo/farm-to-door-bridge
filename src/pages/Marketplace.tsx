@@ -19,6 +19,11 @@ import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
+interface Category {
+  id: string;
+  name: string;
+}
+
 interface Product {
   id: string;
   name: string;
@@ -29,6 +34,7 @@ interface Product {
   certification: string;
   delivery_estimate: string;
   in_stock: boolean;
+  category_id: string;
   farms: {
     id: string;
     name: string;
@@ -41,12 +47,24 @@ const Marketplace = () => {
   const [selectedFarmId, setSelectedFarmId] = useState<string | null>(null);
   const [formOpen, setFormOpen] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const { toast } = useToast();
 
   useEffect(() => {
+    fetchCategories();
     fetchProducts();
   }, []);
+
+  const fetchCategories = async () => {
+    const { data } = await supabase
+      .from("categories")
+      .select("id, name")
+      .order("name", { ascending: true });
+    setCategories(data || []);
+  };
 
   const fetchProducts = async () => {
     try {
@@ -78,6 +96,17 @@ const Marketplace = () => {
       setLoading(false);
     }
   };
+
+  const filteredProducts = products.filter((product) => {
+    const matchesSearch = searchQuery === "" || 
+      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.farms.name.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    const matchesCategory = selectedCategory === "all" || product.category_id === selectedCategory;
+    
+    return matchesSearch && matchesCategory;
+  });
 
   return (
     <div className="min-h-screen bg-background">
@@ -147,50 +176,21 @@ const Marketplace = () => {
               type="search"
               placeholder={t('marketplace.searchPlaceholder')}
               className="flex-1 max-w-md"
-              disabled
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
             <div className="flex flex-wrap gap-2">
-              <Select disabled>
-                <SelectTrigger className="w-[140px]">
+              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <SelectTrigger className="w-[160px]">
                   <SelectValue placeholder={t('marketplace.category')} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">{t('marketplace.allCategories')}</SelectItem>
-                </SelectContent>
-              </Select>
-              <Select disabled>
-                <SelectTrigger className="w-[140px]">
-                  <SelectValue placeholder={t('marketplace.farm')} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">{t('marketplace.allFarms')}</SelectItem>
-                </SelectContent>
-              </Select>
-              <Select disabled>
-                <SelectTrigger className="w-[140px]">
-                  <SelectValue placeholder={t('marketplace.certification')} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">{t('marketplace.allCertifications')}</SelectItem>
-                </SelectContent>
-              </Select>
-              <Select disabled>
-                <SelectTrigger className="w-[140px]">
-                  <SelectValue placeholder={t('marketplace.region')} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">{t('marketplace.allRegions')}</SelectItem>
-                </SelectContent>
-              </Select>
-              <Select disabled>
-                <SelectTrigger className="w-[140px]">
-                  <SelectValue placeholder={t('common.sortBy')} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="relevance">{t('marketplace.relevance')}</SelectItem>
-                  <SelectItem value="newest">{t('marketplace.newest')}</SelectItem>
-                  <SelectItem value="price-low">{t('marketplace.priceLowHigh')}</SelectItem>
-                  <SelectItem value="price-high">{t('marketplace.priceHighLow')}</SelectItem>
+                  {categories.map((category) => (
+                    <SelectItem key={category.id} value={category.id}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -205,21 +205,23 @@ const Marketplace = () => {
             <div className="text-center py-12">
               <p className="text-muted-foreground">{t('marketplace.loadingProducts')}</p>
             </div>
-          ) : products.length === 0 ? (
+          ) : filteredProducts.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-muted-foreground">
-                {t('marketplace.noProducts')}
+                {searchQuery || selectedCategory !== "all" 
+                  ? t('marketplace.noFilteredProducts')
+                  : t('marketplace.noProducts')}
               </p>
             </div>
           ) : (
             <>
               <div className="mb-6">
                 <p className="text-sm text-muted-foreground">
-                  {t('marketplace.showingProducts', { count: products.length })}
+                  {t('marketplace.showingProducts', { count: filteredProducts.length })}
                 </p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {products.map((product) => (
+                {filteredProducts.map((product) => (
                   <ProductCard
                     key={product.id}
                     product={{
