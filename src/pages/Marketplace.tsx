@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet-async";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,6 +15,7 @@ import { FarmProfileDialog } from "@/components/FarmProfileDialog";
 import { CartDrawer } from "@/components/CartDrawer";
 import { Link } from "react-router-dom";
 import { ProducerForm } from "@/components/ProducerForm";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -35,6 +37,7 @@ interface Product {
 }
 
 const Marketplace = () => {
+  const { t } = useTranslation();
   const [selectedFarmId, setSelectedFarmId] = useState<string | null>(null);
   const [formOpen, setFormOpen] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
@@ -67,8 +70,8 @@ const Marketplace = () => {
     } catch (error) {
       console.error("Error fetching products:", error);
       toast({
-        title: "Error loading products",
-        description: "Failed to load marketplace products. Please try again.",
+        title: t('marketplace.errorLoading'),
+        description: t('marketplace.errorDescription'),
         variant: "destructive",
       });
     } finally {
@@ -79,32 +82,33 @@ const Marketplace = () => {
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
-        <title>Organic Marketplace – Shop Fresh Produce | BioBridge</title>
-        <meta name="description" content="Shop certified organic produce from local farms at BioBridge marketplace. Fresh vegetables, fruits, and sustainable products delivered from farm to table. Visit trybiobridge.com" />
-        <meta property="og:title" content="Organic Marketplace – Shop Fresh Produce | BioBridge" />
-        <meta property="og:description" content="Shop certified organic produce from local farms at BioBridge marketplace. Fresh vegetables, fruits, and sustainable products delivered from farm to table." />
+        <title>{t('marketplace.seo.title')}</title>
+        <meta name="description" content={t('marketplace.seo.description')} />
+        <meta property="og:title" content={t('marketplace.seo.title')} />
+        <meta property="og:description" content={t('marketplace.seo.description')} />
       </Helmet>
       
       {/* Header */}
       <header className="sticky top-0 z-50 border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60" role="banner">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <Link to="/" className="text-2xl font-bold text-primary">
-            BioBridge
+            {t('common.biobridge')}
           </Link>
           <nav className="hidden md:flex items-center gap-6">
             <Link to="/marketplace" className="text-foreground hover:text-primary transition-colors">
-              Marketplace
+              {t('nav.marketplace')}
             </Link>
             <Link to="/#how-it-works" className="text-foreground hover:text-primary transition-colors">
-              How it works
+              {t('nav.howItWorks')}
             </Link>
             <Link to="/#for-producers" className="text-foreground hover:text-primary transition-colors">
-              For Producers
+              {t('nav.forProducers')}
             </Link>
           </nav>
           <div className="flex items-center gap-2">
+            <LanguageSwitcher />
             <CartDrawer />
-            <Button onClick={() => setFormOpen(true)}>Join as a Producer</Button>
+            <Button onClick={() => setFormOpen(true)}>{t('common.joinProducer')}</Button>
           </div>
         </div>
       </header>
@@ -113,10 +117,10 @@ const Marketplace = () => {
       <div className="container mx-auto px-4 py-4">
         <nav className="text-sm text-muted-foreground">
           <Link to="/" className="hover:text-foreground transition-colors">
-            Home
+            {t('common.home')}
           </Link>
           <span className="mx-2">›</span>
-          <span className="text-foreground">Marketplace</span>
+          <span className="text-foreground">{t('nav.marketplace')}</span>
         </nav>
       </div>
 
@@ -124,10 +128,10 @@ const Marketplace = () => {
       <section className="py-12 bg-secondary/30">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Fresh Organic Marketplace
+            {t('marketplace.title')}
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Discover hand-selected produce from certified farms at trybiobridge.com
+            {t('marketplace.subtitle')}
           </p>
         </div>
       </section>
@@ -141,52 +145,52 @@ const Marketplace = () => {
           <div className="flex flex-col md:flex-row gap-4 items-center">
             <Input
               type="search"
-              placeholder="Search products or farms…"
+              placeholder={t('marketplace.searchPlaceholder')}
               className="flex-1 max-w-md"
               disabled
             />
             <div className="flex flex-wrap gap-2">
               <Select disabled>
                 <SelectTrigger className="w-[140px]">
-                  <SelectValue placeholder="Category" />
+                  <SelectValue placeholder={t('marketplace.category')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
+                  <SelectItem value="all">{t('marketplace.allCategories')}</SelectItem>
                 </SelectContent>
               </Select>
               <Select disabled>
                 <SelectTrigger className="w-[140px]">
-                  <SelectValue placeholder="Farm" />
+                  <SelectValue placeholder={t('marketplace.farm')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Farms</SelectItem>
+                  <SelectItem value="all">{t('marketplace.allFarms')}</SelectItem>
                 </SelectContent>
               </Select>
               <Select disabled>
                 <SelectTrigger className="w-[140px]">
-                  <SelectValue placeholder="Certification" />
+                  <SelectValue placeholder={t('marketplace.certification')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Certifications</SelectItem>
+                  <SelectItem value="all">{t('marketplace.allCertifications')}</SelectItem>
                 </SelectContent>
               </Select>
               <Select disabled>
                 <SelectTrigger className="w-[140px]">
-                  <SelectValue placeholder="Region" />
+                  <SelectValue placeholder={t('marketplace.region')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Regions</SelectItem>
+                  <SelectItem value="all">{t('marketplace.allRegions')}</SelectItem>
                 </SelectContent>
               </Select>
               <Select disabled>
                 <SelectTrigger className="w-[140px]">
-                  <SelectValue placeholder="Sort by" />
+                  <SelectValue placeholder={t('common.sortBy')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="relevance">Relevance</SelectItem>
-                  <SelectItem value="newest">Newest</SelectItem>
-                  <SelectItem value="price-low">Price: Low → High</SelectItem>
-                  <SelectItem value="price-high">Price: High → Low</SelectItem>
+                  <SelectItem value="relevance">{t('marketplace.relevance')}</SelectItem>
+                  <SelectItem value="newest">{t('marketplace.newest')}</SelectItem>
+                  <SelectItem value="price-low">{t('marketplace.priceLowHigh')}</SelectItem>
+                  <SelectItem value="price-high">{t('marketplace.priceHighLow')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -199,19 +203,19 @@ const Marketplace = () => {
         <div className="container mx-auto px-4">
           {loading ? (
             <div className="text-center py-12">
-              <p className="text-muted-foreground">Loading products...</p>
+              <p className="text-muted-foreground">{t('marketplace.loadingProducts')}</p>
             </div>
           ) : products.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-muted-foreground">
-                No products available yet. Check back soon!
+                {t('marketplace.noProducts')}
               </p>
             </div>
           ) : (
             <>
               <div className="mb-6">
                 <p className="text-sm text-muted-foreground">
-                  Showing {products.length} product{products.length !== 1 ? "s" : ""}
+                  {t('marketplace.showingProducts', { count: products.length })}
                 </p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -246,31 +250,31 @@ const Marketplace = () => {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
             <div className="text-primary-foreground">
-              <h3 className="text-2xl font-bold mb-2">BioBridge</h3>
+              <h3 className="text-2xl font-bold mb-2">{t('common.biobridge')}</h3>
               <p className="text-primary-foreground/80">
-                BioBridge partners only with certified-organic producers.
+                {t('home.footer.partnerStatement')}
               </p>
             </div>
             <div className="flex flex-wrap gap-6 text-primary-foreground/80">
               <Link to="#" className="hover:text-primary-foreground transition-colors">
-                About
+                {t('common.about')}
               </Link>
               <Link to="#" className="hover:text-primary-foreground transition-colors">
-                FAQ
+                {t('common.faq')}
               </Link>
               <Link to="#" className="hover:text-primary-foreground transition-colors">
-                Contact
+                {t('common.contact')}
               </Link>
               <Link to="#" className="hover:text-primary-foreground transition-colors">
-                Terms
+                {t('common.terms')}
               </Link>
               <Link to="#" className="hover:text-primary-foreground transition-colors">
-                Privacy
+                {t('common.privacy')}
               </Link>
             </div>
           </div>
           <div className="pt-8 border-t border-primary-foreground/20 text-center text-primary-foreground/60">
-            <p>© 2024 BioBridge. All rights reserved.</p>
+            <p>{t('common.copyright', { year: new Date().getFullYear() })}</p>
           </div>
         </div>
       </footer>

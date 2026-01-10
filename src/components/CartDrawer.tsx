@@ -1,4 +1,5 @@
 import { ShoppingCart, Plus, Minus, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -9,8 +10,10 @@ import {
 } from '@/components/ui/sheet';
 import { useCart } from '@/contexts/CartContext';
 import { useNavigate } from 'react-router-dom';
+import { formatCurrency } from '@/i18n/formatters';
 
 export const CartDrawer = () => {
+  const { t } = useTranslation();
   const { items, updateQuantity, removeItem, totalItems, subtotal, deliveryFee, total, freeDeliveryThreshold } = useCart();
   const navigate = useNavigate();
 
@@ -28,13 +31,13 @@ export const CartDrawer = () => {
       </SheetTrigger>
       <SheetContent className="w-full sm:max-w-lg flex flex-col">
         <SheetHeader>
-          <SheetTitle>Your Cart</SheetTitle>
+          <SheetTitle>{t('cart.title')}</SheetTitle>
         </SheetHeader>
         
         {items.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center text-muted-foreground mt-8">
             <ShoppingCart className="h-16 w-16 mb-4 opacity-20" />
-            <p>Your cart is empty</p>
+            <p>{t('cart.empty')}</p>
           </div>
         ) : (
           <>
@@ -52,7 +55,7 @@ export const CartDrawer = () => {
                     <h4 className="font-medium text-sm truncate">{item.name}</h4>
                     <p className="text-xs text-muted-foreground">{item.farm}</p>
                     <p className="text-sm font-semibold mt-1">
-                      €{item.price.toFixed(2)}/{item.unit}
+                      {formatCurrency(item.price)}/{item.unit}
                     </p>
                     <div className="flex items-center gap-2 mt-2">
                       <Button
@@ -86,7 +89,7 @@ export const CartDrawer = () => {
                   </div>
                   <div className="text-right">
                     <p className="font-semibold">
-                      €{(item.price * item.quantity).toFixed(2)}
+                      {formatCurrency(item.price * item.quantity)}
                     </p>
                   </div>
                 </div>
@@ -96,23 +99,23 @@ export const CartDrawer = () => {
             <div className="border-t border-border pt-4 mt-4 space-y-3 bg-background">
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span>Subtotal</span>
-                  <span>€{subtotal.toFixed(2)}</span>
+                  <span>{t('cart.subtotal')}</span>
+                  <span>{formatCurrency(subtotal)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span>Delivery Fee</span>
+                  <span>{t('cart.deliveryFee')}</span>
                   <span className={deliveryFee === 0 ? 'text-green-600 font-medium' : ''}>
-                    {deliveryFee === 0 ? 'FREE' : `€${deliveryFee.toFixed(2)}`}
+                    {deliveryFee === 0 ? t('cart.free') : formatCurrency(deliveryFee)}
                   </span>
                 </div>
                 {deliveryFee > 0 && subtotal < freeDeliveryThreshold && (
                   <p className="text-xs text-muted-foreground">
-                    Add €{(freeDeliveryThreshold - subtotal).toFixed(2)} more for free delivery
+                    {t('cart.addMoreForFree', { amount: (freeDeliveryThreshold - subtotal).toFixed(2) })}
                   </p>
                 )}
                 <div className="flex justify-between text-lg font-bold border-t border-border pt-2">
-                  <span>Total</span>
-                  <span>€{total.toFixed(2)}</span>
+                  <span>{t('cart.total')}</span>
+                  <span>{formatCurrency(total)}</span>
                 </div>
               </div>
               <Button
@@ -120,7 +123,7 @@ export const CartDrawer = () => {
                 size="lg"
                 onClick={() => navigate('/checkout')}
               >
-                Proceed to Checkout
+                {t('cart.proceedToCheckout')}
               </Button>
             </div>
           </>
