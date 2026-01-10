@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
 import { CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
-import { format } from 'date-fns';
+import { formatDate, formatCurrency } from '@/i18n/formatters';
 
 interface OrderDetails {
   id: string;
@@ -30,6 +31,7 @@ interface OrderDetails {
 }
 
 export default function OrderConfirmation() {
+  const { t } = useTranslation();
   const { orderId } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -40,7 +42,7 @@ export default function OrderConfirmation() {
   useEffect(() => {
     const fetchOrder = async () => {
       if (!orderId) {
-        setError('No order ID provided');
+        setError(t('orderConfirmation.orderNotFound'));
         setLoading(false);
         return;
       }
@@ -49,7 +51,7 @@ export default function OrderConfirmation() {
       const token = searchParams.get('token');
       
       if (!token) {
-        setError('Invalid order access link');
+        setError(t('orderConfirmation.invalidLink'));
         setLoading(false);
         return;
       }
@@ -63,7 +65,7 @@ export default function OrderConfirmation() {
           });
 
         if (orderError || !orderData || orderData.length === 0) {
-          setError('Order not found or access denied');
+          setError(t('orderConfirmation.accessDenied'));
           setLoading(false);
           return;
         }
@@ -83,19 +85,19 @@ export default function OrderConfirmation() {
         });
       } catch (err) {
         console.error('Error fetching order:', err);
-        setError('Failed to load order details');
+        setError(t('orderConfirmation.orderNotFound'));
       } finally {
         setLoading(false);
       }
     };
 
     fetchOrder();
-  }, [orderId, searchParams]);
+  }, [orderId, searchParams, t]);
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p>Loading order details...</p>
+        <p>{t('orderConfirmation.loadingOrder')}</p>
       </div>
     );
   }
@@ -105,13 +107,13 @@ export default function OrderConfirmation() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">
-            {error || 'Order not found'}
+            {error || t('orderConfirmation.orderNotFound')}
           </h1>
           <p className="text-muted-foreground mb-4">
-            Please check your order confirmation email for the correct link.
+            {t('orderConfirmation.checkEmail')}
           </p>
           <Button onClick={() => navigate('/marketplace')}>
-            Back to Marketplace
+            {t('orderConfirmation.backToMarketplace')}
           </Button>
         </div>
       </div>
@@ -121,31 +123,33 @@ export default function OrderConfirmation() {
   return (
     <>
       <Helmet>
-        <title>Order Confirmation – BioBridge</title>
-        <meta name="description" content="Your order has been placed successfully" />
+        <title>{t('orderConfirmation.seo.title')}</title>
+        <meta name="description" content={t('orderConfirmation.seo.description')} />
       </Helmet>
 
       <div className="min-h-screen bg-background py-12 px-4">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-8">
             <CheckCircle2 className="h-16 w-16 text-green-600 mx-auto mb-4" />
-            <h1 className="text-3xl font-bold mb-2">Thank You for Your Order!</h1>
+            <h1 className="text-3xl font-bold mb-2">{t('orderConfirmation.title')}</h1>
             <p className="text-muted-foreground">
-              Your order has been placed successfully
+              {t('orderConfirmation.subtitle')}
             </p>
           </div>
 
           <div className="bg-card p-6 rounded-lg border border-border space-y-6">
             <div>
-              <h2 className="text-xl font-semibold mb-2">Order Details</h2>
-              <p className="text-sm text-muted-foreground">Order ID: {order.id}</p>
+              <h2 className="text-xl font-semibold mb-2">{t('orderConfirmation.orderDetails')}</h2>
               <p className="text-sm text-muted-foreground">
-                Placed on: {format(new Date(order.created_at), 'PPP')}
+                {t('orderConfirmation.orderId', { id: order.id })}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                {t('orderConfirmation.placedOn', { date: formatDate(order.created_at) })}
               </p>
             </div>
 
             <div>
-              <h3 className="font-semibold mb-3">Items Ordered</h3>
+              <h3 className="font-semibold mb-3">{t('orderConfirmation.itemsOrdered')}</h3>
               <div className="space-y-3">
                 {order.order_items.map((item, index) => (
                   <div key={index} className="flex justify-between border-b border-border pb-3">
@@ -153,33 +157,33 @@ export default function OrderConfirmation() {
                       <p className="font-medium">{item.product_name}</p>
                       <p className="text-sm text-muted-foreground">{item.farm_name}</p>
                       <p className="text-sm">
-                        {item.quantity} {item.unit} × €{Number(item.unit_price).toFixed(2)}
+                        {item.quantity} {item.unit} × {formatCurrency(Number(item.unit_price))}
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="font-semibold">€{Number(item.line_total).toFixed(2)}</p>
+                      <p className="font-semibold">{formatCurrency(Number(item.line_total))}</p>
                     </div>
                   </div>
                 ))}
               </div>
               <div className="mt-4 pt-4 border-t border-border flex justify-between text-lg font-bold">
-                <span>Total</span>
-                <span>€{Number(order.total_amount).toFixed(2)}</span>
+                <span>{t('cart.total')}</span>
+                <span>{formatCurrency(Number(order.total_amount))}</span>
               </div>
             </div>
 
             <div>
-              <h3 className="font-semibold mb-3">Delivery Information</h3>
+              <h3 className="font-semibold mb-3">{t('orderConfirmation.deliveryInfo')}</h3>
               <div className="space-y-1 text-sm">
                 <p>
-                  <span className="font-medium">Name:</span> {order.customer_first_name}{' '}
+                  <span className="font-medium">{t('orderConfirmation.name')}</span> {order.customer_first_name}{' '}
                   {order.customer_last_name}
                 </p>
                 <p>
-                  <span className="font-medium">Email:</span> {order.customer_email}
+                  <span className="font-medium">{t('orderConfirmation.emailLabel')}</span> {order.customer_email}
                 </p>
                 <p className="mt-2">
-                  <span className="font-medium">Delivery Address:</span>
+                  <span className="font-medium">{t('orderConfirmation.deliveryAddress')}</span>
                 </p>
                 <p className="ml-4">
                   {order.delivery_street}
@@ -189,12 +193,12 @@ export default function OrderConfirmation() {
                   {order.delivery_country}
                 </p>
                 <p className="mt-2">
-                  <span className="font-medium">Delivery Date:</span>{' '}
-                  {format(new Date(order.delivery_date), 'PPP')}
+                  <span className="font-medium">{t('orderConfirmation.deliveryDate')}</span>{' '}
+                  {formatDate(order.delivery_date)}
                 </p>
                 {order.delivery_time_slot && (
                   <p>
-                    <span className="font-medium">Time Slot:</span> {order.delivery_time_slot}
+                    <span className="font-medium">{t('orderConfirmation.timeSlotLabel')}</span> {order.delivery_time_slot}
                   </p>
                 )}
               </div>
@@ -202,18 +206,16 @@ export default function OrderConfirmation() {
 
             <div className="bg-muted p-4 rounded">
               <p className="text-sm">
-                You will receive a confirmation email at{' '}
-                <span className="font-medium">{order.customer_email}</span> with your order
-                details and tracking information.
+                {t('orderConfirmation.confirmationEmail', { email: order.customer_email })}
               </p>
             </div>
 
             <div className="flex gap-4">
               <Button onClick={() => navigate('/marketplace')} variant="outline" className="flex-1">
-                Continue Shopping
+                {t('orderConfirmation.continueShopping')}
               </Button>
               <Button onClick={() => navigate('/')} className="flex-1">
-                Back to Home
+                {t('orderConfirmation.backToHome')}
               </Button>
             </div>
           </div>

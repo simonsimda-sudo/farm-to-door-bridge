@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -33,6 +34,7 @@ interface ProductCardProps {
 }
 
 export const ProductCard = ({ product, onViewFarm }: ProductCardProps) => {
+  const { t } = useTranslation();
   const [quantity, setQuantity] = useState(1);
   const { addItem } = useCart();
 
@@ -50,8 +52,12 @@ export const ProductCard = ({ product, onViewFarm }: ProductCardProps) => {
       image: product.image,
     });
     toast({
-      title: "Added to cart",
-      description: `${quantity} ${product.unit} of ${product.name} added to your cart`,
+      title: t('product.addedToCart'),
+      description: t('product.addedDescription', { 
+        quantity, 
+        unit: product.unit, 
+        name: product.name 
+      }),
     });
     setQuantity(1);
   };
@@ -123,7 +129,7 @@ export const ProductCard = ({ product, onViewFarm }: ProductCardProps) => {
           </div>
           <Button className="flex-1" onClick={handleAddToCart}>
             <ShoppingCart className="h-4 w-4" />
-            Add to Cart
+            {t('product.addToCart')}
           </Button>
         </div>
       </CardContent>
@@ -133,7 +139,7 @@ export const ProductCard = ({ product, onViewFarm }: ProductCardProps) => {
           className="w-full"
           onClick={() => onViewFarm(product.farmId)}
         >
-          See the Farm
+          {t('product.seeTheFarm')}
         </Button>
       </CardFooter>
     </Card>

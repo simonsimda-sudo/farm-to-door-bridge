@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,6 +13,7 @@ interface ProducerFormProps {
 }
 
 export const ProducerForm = ({ open, onOpenChange }: ProducerFormProps) => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -28,14 +30,12 @@ export const ProducerForm = ({ open, onOpenChange }: ProducerFormProps) => {
     setIsSubmitting(true);
 
     try {
-      // Validate form
       if (!formData.name || !formData.email || !formData.location) {
-        toast.error("Please fill in all required fields");
+        toast.error(t('producerForm.toast.requiredFields'));
         setIsSubmitting(false);
         return;
       }
 
-      // Create email body
       const emailBody = `
 New Producer Application:
 
@@ -48,12 +48,10 @@ Certifications: ${formData.certifications}
 Profile: ${formData.profile}
       `;
 
-      // For now, we'll use a mailto link as a fallback
-      // In production, this should use an edge function
       const mailtoLink = `mailto:simon.simda@gmail.com?subject=New Producer Application - ${formData.name}&body=${encodeURIComponent(emailBody)}`;
       window.location.href = mailtoLink;
 
-      toast.success("Application submitted! We'll be in touch soon.");
+      toast.success(t('producerForm.toast.success'));
       setFormData({
         name: "",
         email: "",
@@ -65,7 +63,7 @@ Profile: ${formData.profile}
       });
       onOpenChange(false);
     } catch (error) {
-      toast.error("Failed to submit application. Please try again.");
+      toast.error(t('producerForm.toast.error'));
     } finally {
       setIsSubmitting(false);
     }
@@ -75,94 +73,94 @@ Profile: ${formData.profile}
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-2xl">Join as a Producer</DialogTitle>
+          <DialogTitle className="text-2xl">{t('producerForm.title')}</DialogTitle>
           <DialogDescription>
-            Tell us about your farm or production facility. We'll review your application and get back to you soon.
+            {t('producerForm.description')}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="name">Name *</Label>
+            <Label htmlFor="name">{t('producerForm.name')}</Label>
             <Input
               id="name"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              placeholder="Your full name or business name"
+              placeholder={t('producerForm.namePlaceholder')}
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="email">Email *</Label>
+            <Label htmlFor="email">{t('producerForm.email')}</Label>
             <Input
               id="email"
               type="email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              placeholder="your@email.com"
+              placeholder={t('producerForm.emailPlaceholder')}
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="phone">Phone</Label>
+            <Label htmlFor="phone">{t('producerForm.phone')}</Label>
             <Input
               id="phone"
               type="tel"
               value={formData.phone}
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-              placeholder="+49 30 1234 5678"
+              placeholder={t('producerForm.phonePlaceholder')}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="location">Location *</Label>
+            <Label htmlFor="location">{t('producerForm.location')}</Label>
             <Input
               id="location"
               value={formData.location}
               onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-              placeholder="City, State"
+              placeholder={t('producerForm.locationPlaceholder')}
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="categories">Product Categories</Label>
+            <Label htmlFor="categories">{t('producerForm.categories')}</Label>
             <Input
               id="categories"
               value={formData.categories}
               onChange={(e) => setFormData({ ...formData, categories: e.target.value })}
-              placeholder="e.g., Vegetables, Fruits, Dairy"
+              placeholder={t('producerForm.categoriesPlaceholder')}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="certifications">Certifications</Label>
+            <Label htmlFor="certifications">{t('producerForm.certifications')}</Label>
             <Input
               id="certifications"
               value={formData.certifications}
               onChange={(e) => setFormData({ ...formData, certifications: e.target.value })}
-              placeholder="e.g., USDA Organic, Non-GMO"
+              placeholder={t('producerForm.certificationsPlaceholder')}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="profile">Tell Us About Your Farm</Label>
+            <Label htmlFor="profile">{t('producerForm.farmProfile')}</Label>
             <Textarea
               id="profile"
               value={formData.profile}
               onChange={(e) => setFormData({ ...formData, profile: e.target.value })}
-              placeholder="Share your story, farming methods, and what makes your products special..."
+              placeholder={t('producerForm.farmProfilePlaceholder')}
               rows={6}
             />
           </div>
 
           <div className="flex gap-4">
             <Button type="submit" disabled={isSubmitting} className="flex-1">
-              {isSubmitting ? "Submitting..." : "Submit Application"}
+              {isSubmitting ? t('producerForm.submitting') : t('producerForm.submitApplication')}
             </Button>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              Cancel
+              {t('common.cancel')}
             </Button>
           </div>
         </form>
