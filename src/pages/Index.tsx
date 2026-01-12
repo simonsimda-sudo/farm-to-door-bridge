@@ -8,6 +8,7 @@ import heroImage from "@/assets/hero-organic-produce.jpg";
 import farmImage from "@/assets/farm-landscape.jpg";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { UserMenu } from "@/components/UserMenu";
 
 const Index = () => {
   const { t } = useTranslation();
@@ -26,9 +27,12 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Language Switcher - Fixed Position */}
-      <div className="fixed top-4 right-4 z-50">
+      {/* Header Controls - Fixed Position */}
+      <div className="fixed top-4 right-4 z-50 flex items-center gap-2">
         <LanguageSwitcher variant="compact" className="bg-white/90 backdrop-blur rounded-lg px-2 py-1 shadow-lg" />
+        <div className="bg-white/90 backdrop-blur rounded-lg shadow-lg">
+          <UserMenu />
+        </div>
       </div>
 
       {/* Hero Section */}
