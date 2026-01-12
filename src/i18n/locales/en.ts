@@ -414,6 +414,13 @@ export const en = {
     farmProfilePlaceholder: "Share your story, farming methods, and what makes your products special...",
     submitApplication: "Submit Application",
     submitting: "Submitting...",
+    validation: {
+      nameRequired: "Name is required",
+      nameTooLong: "Name must be less than 100 characters",
+      emailRequired: "Email is required",
+      emailInvalid: "Please enter a valid email address",
+      locationRequired: "Location is required",
+    },
     toast: {
       requiredFields: "Please fill in all required fields",
       success: "Application submitted! We'll be in touch soon.",
