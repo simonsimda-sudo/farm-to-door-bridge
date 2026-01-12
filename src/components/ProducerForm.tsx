@@ -48,7 +48,7 @@ Certifications: ${formData.certifications}
 Profile: ${formData.profile}
       `;
 
-      const mailtoLink = `mailto:simon.simda@gmail.com?subject=New Producer Application - ${formData.name}&body=${encodeURIComponent(emailBody)}`;
+      const mailtoLink = `mailto:simon@trybiobridge.com?subject=New Producer Application - ${formData.name}&body=${encodeURIComponent(emailBody)}`;
       window.location.href = mailtoLink;
 
       toast.success(t('producerForm.toast.success'));
