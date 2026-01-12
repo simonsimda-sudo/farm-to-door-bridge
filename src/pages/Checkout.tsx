@@ -113,13 +113,15 @@ export default function Checkout() {
     setIsSubmitting(true);
 
     try {
-      // Generate confirmation token for secure order viewing
+      // Generate IDs client-side to avoid needing SELECT permission after INSERT
+      const orderId = crypto.randomUUID();
       const confirmationToken = crypto.randomUUID();
       
-      // Create order with confirmation token
-      const { data: order, error: orderError } = await supabase
+      // Create order (no .select() to avoid RLS SELECT requirement)
+      const { error: orderError } = await supabase
         .from('orders')
         .insert({
+          id: orderId,
           customer_first_name: data.firstName,
           customer_last_name: data.lastName,
           customer_email: data.email,
@@ -134,15 +136,16 @@ export default function Checkout() {
           order_status: 'new',
           total_amount: total,
           confirmation_token: confirmationToken,
-        })
-        .select()
-        .single();
+        });
 
-      if (orderError) throw orderError;
+      if (orderError) {
+        console.error('Order insert error:', orderError);
+        throw orderError;
+      }
 
-      // Create order items
+      // Create order items using the known orderId
       const orderItems = items.map(item => ({
-        order_id: order.id,
+        order_id: orderId,
         product_id: item.productId,
         product_name: item.name,
         farm_name: item.farm,
@@ -156,11 +159,14 @@ export default function Checkout() {
         .from('order_items')
         .insert(orderItems);
 
-      if (itemsError) throw itemsError;
+      if (itemsError) {
+        console.error('Order items insert error:', itemsError);
+        throw itemsError;
+      }
 
       // Clear cart and navigate to confirmation with token
       clearCart();
-      navigate(`/order-confirmation/${order.id}?token=${confirmationToken}`);
+      navigate(`/order-confirmation/${orderId}?token=${confirmationToken}`);
       
       toast({
         title: 'Order placed successfully!',
