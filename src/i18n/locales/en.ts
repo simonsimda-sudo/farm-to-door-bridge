@@ -1,4 +1,13 @@
 export const en = {
+  user: {
+    profile: "User profile",
+    account: "My Account",
+    settings: "Settings",
+    logout: "Log out",
+    logoutSuccess: "Logged out successfully",
+    logoutDescription: "You have been logged out of your account.",
+    logoutError: "Failed to log out",
+  },
   common: {
     biobridge: "BioBridge",
     tagline: "From Certified Organic Farms to Your Door",

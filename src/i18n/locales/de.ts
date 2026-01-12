@@ -1,6 +1,15 @@
 import type { TranslationKeys } from './en';
 
 export const de: TranslationKeys = {
+  user: {
+    profile: "Benutzerprofil",
+    account: "Mein Konto",
+    settings: "Einstellungen",
+    logout: "Abmelden",
+    logoutSuccess: "Erfolgreich abgemeldet",
+    logoutDescription: "Sie wurden von Ihrem Konto abgemeldet.",
+    logoutError: "Abmeldung fehlgeschlagen",
+  },
   common: {
     biobridge: "BioBridge",
     tagline: "Von zertifizierten Bio-Höfen direkt zu Ihnen",

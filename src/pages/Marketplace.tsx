@@ -16,6 +16,7 @@ import { CartDrawer } from "@/components/CartDrawer";
 import { Link } from "react-router-dom";
 import { ProducerForm } from "@/components/ProducerForm";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { UserMenu } from "@/components/UserMenu";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -136,6 +137,7 @@ const Marketplace = () => {
           </nav>
           <div className="flex items-center gap-2">
             <LanguageSwitcher />
+            <UserMenu />
             <CartDrawer />
             <Button onClick={() => setFormOpen(true)}>{t('common.joinProducer')}</Button>
           </div>
