@@ -409,7 +409,7 @@ export const en = {
     categories: "Product Categories",
     categoriesPlaceholder: "e.g., Vegetables, Fruits, Dairy",
     certifications: "Certifications",
-    certificationsPlaceholder: "e.g., USDA Organic, Non-GMO",
+    certificationsPlaceholder: "e.g., Bioland, Naturland, Demeter, Biokreis",
     farmProfile: "Tell Us About Your Farm",
     farmProfilePlaceholder: "Share your story, farming methods, and what makes your products special...",
     submitApplication: "Submit Application",

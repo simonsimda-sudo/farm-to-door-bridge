@@ -411,7 +411,7 @@ export const de: TranslationKeys = {
     categories: "Produktkategorien",
     categoriesPlaceholder: "z.B. Gemüse, Obst, Milchprodukte",
     certifications: "Zertifizierungen",
-    certificationsPlaceholder: "z.B. EU-Bio, Demeter, Bioland",
+    certificationsPlaceholder: "z.B. Bioland, Naturland, Demeter, Biokreis",
     farmProfile: "Erzählen Sie uns von Ihrem Hof",
     farmProfilePlaceholder: "Teilen Sie Ihre Geschichte, Anbaumethoden und was Ihre Produkte besonders macht...",
     submitApplication: "Bewerbung absenden",
