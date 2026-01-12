@@ -416,6 +416,13 @@ export const de: TranslationKeys = {
     farmProfilePlaceholder: "Teilen Sie Ihre Geschichte, Anbaumethoden und was Ihre Produkte besonders macht...",
     submitApplication: "Bewerbung absenden",
     submitting: "Wird gesendet...",
+    validation: {
+      nameRequired: "Name ist erforderlich",
+      nameTooLong: "Name darf maximal 100 Zeichen haben",
+      emailRequired: "E-Mail ist erforderlich",
+      emailInvalid: "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+      locationRequired: "Standort ist erforderlich",
+    },
     toast: {
       requiredFields: "Bitte füllen Sie alle Pflichtfelder aus",
       success: "Bewerbung eingereicht! Wir melden uns bald bei Ihnen.",

@@ -6,15 +6,40 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { z } from "zod";
+import { cn } from "@/lib/utils";
 
 interface ProducerFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
+const createFormSchema = (t: (key: string) => string) =>
+  z.object({
+    name: z.string().trim().min(1, { message: t('producerForm.validation.nameRequired') }).max(100, { message: t('producerForm.validation.nameTooLong') }),
+    email: z.string().trim().min(1, { message: t('producerForm.validation.emailRequired') }).email({ message: t('producerForm.validation.emailInvalid') }).max(255),
+    phone: z.string().max(50).optional(),
+    location: z.string().trim().min(1, { message: t('producerForm.validation.locationRequired') }).max(200),
+    categories: z.string().max(500).optional(),
+    certifications: z.string().max(500).optional(),
+    profile: z.string().max(2000).optional(),
+  });
+
+type FormData = {
+  name: string;
+  email: string;
+  phone: string;
+  location: string;
+  categories: string;
+  certifications: string;
+  profile: string;
+};
+
+type FormErrors = Partial<Record<keyof FormData, string>>;
+
 export const ProducerForm = ({ open, onOpenChange }: ProducerFormProps) => {
   const { t } = useTranslation();
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
     phone: "",
@@ -23,19 +48,56 @@ export const ProducerForm = ({ open, onOpenChange }: ProducerFormProps) => {
     certifications: "",
     profile: "",
   });
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [touched, setTouched] = useState<Partial<Record<keyof FormData, boolean>>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const validateField = (field: keyof FormData, value: string): string | undefined => {
+    const schema = createFormSchema(t);
+    const fieldSchema = schema.shape[field];
+    const result = fieldSchema.safeParse(value);
+    return result.success ? undefined : result.error.errors[0]?.message;
+  };
+
+  const handleBlur = (field: keyof FormData) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+    const error = validateField(field, formData[field]);
+    setErrors((prev) => ({ ...prev, [field]: error }));
+  };
+
+  const handleChange = (field: keyof FormData, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    if (touched[field]) {
+      const error = validateField(field, value);
+      setErrors((prev) => ({ ...prev, [field]: error }));
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    try {
-      if (!formData.name || !formData.email || !formData.location) {
-        toast.error(t('producerForm.toast.requiredFields'));
-        setIsSubmitting(false);
-        return;
-      }
+    // Mark all required fields as touched
+    setTouched({ name: true, email: true, location: true });
 
+    const schema = createFormSchema(t);
+    const result = schema.safeParse(formData);
+
+    if (!result.success) {
+      const newErrors: FormErrors = {};
+      result.error.errors.forEach((err) => {
+        const field = err.path[0] as keyof FormData;
+        if (!newErrors[field]) {
+          newErrors[field] = err.message;
+        }
+      });
+      setErrors(newErrors);
+      toast.error(t('producerForm.toast.requiredFields'));
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
       const emailBody = `
 New Producer Application:
 
@@ -48,7 +110,7 @@ Certifications: ${formData.certifications}
 Profile: ${formData.profile}
       `;
 
-      const mailtoLink = `mailto:simon@trybiobridge.com?subject=New Producer Application - ${formData.name}&body=${encodeURIComponent(emailBody)}`;
+      const mailtoLink = `mailto:simon@trybiobridge.com?subject=New Producer Application - ${encodeURIComponent(formData.name)}&body=${encodeURIComponent(emailBody)}`;
       window.location.href = mailtoLink;
 
       toast.success(t('producerForm.toast.success'));
@@ -61,12 +123,20 @@ Profile: ${formData.profile}
         certifications: "",
         profile: "",
       });
+      setErrors({});
+      setTouched({});
       onOpenChange(false);
     } catch (error) {
       toast.error(t('producerForm.toast.error'));
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const getInputClassName = (field: keyof FormData) => {
+    return cn(
+      touched[field] && errors[field] && "border-destructive focus-visible:ring-destructive"
+    );
   };
 
   return (
@@ -78,28 +148,44 @@ Profile: ${formData.profile}
             {t('producerForm.description')}
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6" noValidate>
           <div className="space-y-2">
-            <Label htmlFor="name">{t('producerForm.name')}</Label>
+            <Label htmlFor="name" className={cn(touched.name && errors.name && "text-destructive")}>
+              {t('producerForm.name')}
+            </Label>
             <Input
               id="name"
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={(e) => handleChange("name", e.target.value)}
+              onBlur={() => handleBlur("name")}
               placeholder={t('producerForm.namePlaceholder')}
-              required
+              className={getInputClassName("name")}
+              aria-invalid={touched.name && !!errors.name}
+              aria-describedby={errors.name ? "name-error" : undefined}
             />
+            {touched.name && errors.name && (
+              <p id="name-error" className="text-sm text-destructive">{errors.name}</p>
+            )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="email">{t('producerForm.email')}</Label>
+            <Label htmlFor="email" className={cn(touched.email && errors.email && "text-destructive")}>
+              {t('producerForm.email')}
+            </Label>
             <Input
               id="email"
               type="email"
               value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              onChange={(e) => handleChange("email", e.target.value)}
+              onBlur={() => handleBlur("email")}
               placeholder={t('producerForm.emailPlaceholder')}
-              required
+              className={getInputClassName("email")}
+              aria-invalid={touched.email && !!errors.email}
+              aria-describedby={errors.email ? "email-error" : undefined}
             />
+            {touched.email && errors.email && (
+              <p id="email-error" className="text-sm text-destructive">{errors.email}</p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -108,20 +194,28 @@ Profile: ${formData.profile}
               id="phone"
               type="tel"
               value={formData.phone}
-              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              onChange={(e) => handleChange("phone", e.target.value)}
               placeholder={t('producerForm.phonePlaceholder')}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="location">{t('producerForm.location')}</Label>
+            <Label htmlFor="location" className={cn(touched.location && errors.location && "text-destructive")}>
+              {t('producerForm.location')}
+            </Label>
             <Input
               id="location"
               value={formData.location}
-              onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+              onChange={(e) => handleChange("location", e.target.value)}
+              onBlur={() => handleBlur("location")}
               placeholder={t('producerForm.locationPlaceholder')}
-              required
+              className={getInputClassName("location")}
+              aria-invalid={touched.location && !!errors.location}
+              aria-describedby={errors.location ? "location-error" : undefined}
             />
+            {touched.location && errors.location && (
+              <p id="location-error" className="text-sm text-destructive">{errors.location}</p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -129,7 +223,7 @@ Profile: ${formData.profile}
             <Input
               id="categories"
               value={formData.categories}
-              onChange={(e) => setFormData({ ...formData, categories: e.target.value })}
+              onChange={(e) => handleChange("categories", e.target.value)}
               placeholder={t('producerForm.categoriesPlaceholder')}
             />
           </div>
@@ -139,7 +233,7 @@ Profile: ${formData.profile}
             <Input
               id="certifications"
               value={formData.certifications}
-              onChange={(e) => setFormData({ ...formData, certifications: e.target.value })}
+              onChange={(e) => handleChange("certifications", e.target.value)}
               placeholder={t('producerForm.certificationsPlaceholder')}
             />
           </div>
@@ -149,7 +243,7 @@ Profile: ${formData.profile}
             <Textarea
               id="profile"
               value={formData.profile}
-              onChange={(e) => setFormData({ ...formData, profile: e.target.value })}
+              onChange={(e) => handleChange("profile", e.target.value)}
               placeholder={t('producerForm.farmProfilePlaceholder')}
               rows={6}
             />
