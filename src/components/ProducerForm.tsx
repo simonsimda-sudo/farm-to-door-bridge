@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { toast } from "sonner";
 import { z } from "zod";
 import { cn } from "@/lib/utils";
+import { trackFormSubmit } from "@/hooks/useAnalytics";
 
 interface ProducerFormProps {
   open: boolean;
@@ -113,6 +114,7 @@ Profile: ${formData.profile}
       const mailtoLink = `mailto:simon@trybiobridge.com?subject=New Producer Application - ${encodeURIComponent(formData.name)}&body=${encodeURIComponent(emailBody)}`;
       window.location.href = mailtoLink;
 
+      trackFormSubmit('producer_form');
       toast.success(t('producerForm.toast.success'));
       setFormData({
         name: "",

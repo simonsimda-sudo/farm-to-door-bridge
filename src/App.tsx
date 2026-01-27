@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { CartProvider } from "@/contexts/CartContext";
+import { AnalyticsProvider } from "@/components/AnalyticsProvider";
 import Index from "./pages/Index";
 import Marketplace from "./pages/Marketplace";
 import Checkout from "./pages/Checkout";
@@ -23,6 +24,7 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
+            <AnalyticsProvider />
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/marketplace" element={<Marketplace />} />

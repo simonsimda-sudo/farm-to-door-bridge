@@ -19,6 +19,7 @@ import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { UserMenu } from "@/components/UserMenu";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { trackCtaClick } from "@/hooks/useAnalytics";
 
 interface Category {
   id: string;
@@ -139,7 +140,10 @@ const Marketplace = () => {
             <LanguageSwitcher />
             <UserMenu />
             <CartDrawer />
-            <Button onClick={() => setFormOpen(true)}>{t('common.joinProducer')}</Button>
+            <Button onClick={() => {
+              trackCtaClick('join_producer');
+              setFormOpen(true);
+            }}>{t('common.joinProducer')}</Button>
           </div>
         </div>
       </header>
