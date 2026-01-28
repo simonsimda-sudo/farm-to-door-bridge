@@ -113,56 +113,40 @@ export default function Checkout() {
     setIsSubmitting(true);
 
     try {
-      // Generate IDs client-side to avoid needing SELECT permission after INSERT
-      const orderId = crypto.randomUUID();
-      const confirmationToken = crypto.randomUUID();
-      
-      // Create order (no .select() to avoid RLS SELECT requirement)
-      const { error: orderError } = await supabase
-        .from('orders')
-        .insert({
-          id: orderId,
-          customer_first_name: data.firstName,
-          customer_last_name: data.lastName,
-          customer_email: data.email,
-          customer_phone: data.phone,
-          delivery_street: data.street,
-          delivery_city: data.city,
-          delivery_postal_code: data.postalCode,
-          delivery_country: data.country,
-          delivery_notes: data.deliveryNotes || null,
-          delivery_date: format(data.deliveryDate, 'yyyy-MM-dd'),
-          delivery_time_slot: data.timeSlot || null,
-          order_status: 'new',
-          total_amount: total,
-          confirmation_token: confirmationToken,
-        });
-
-      if (orderError) {
-        console.error('Order insert error:', orderError);
-        throw orderError;
-      }
-
-      // Create order items using the known orderId
+      // Prepare order items with only product_id and quantity
+      // Prices are looked up server-side to prevent price manipulation
       const orderItems = items.map(item => ({
-        order_id: orderId,
         product_id: item.productId,
-        product_name: item.name,
-        farm_name: item.farm,
         quantity: item.quantity,
-        unit: item.unit,
-        unit_price: item.price,
-        line_total: item.price * item.quantity,
       }));
 
-      const { error: itemsError } = await supabase
-        .from('order_items')
-        .insert(orderItems);
+      // Call secure RPC function that validates prices server-side
+      const { data: orderResult, error } = await supabase
+        .rpc('create_order_with_items', {
+          _customer_first_name: data.firstName,
+          _customer_last_name: data.lastName,
+          _customer_email: data.email,
+          _customer_phone: data.phone,
+          _delivery_street: data.street,
+          _delivery_city: data.city,
+          _delivery_postal_code: data.postalCode,
+          _delivery_country: data.country,
+          _delivery_notes: data.deliveryNotes || null,
+          _delivery_date: format(data.deliveryDate, 'yyyy-MM-dd'),
+          _delivery_time_slot: data.timeSlot || null,
+          _items: orderItems,
+        });
 
-      if (itemsError) {
-        console.error('Order items insert error:', itemsError);
-        throw itemsError;
+      if (error) {
+        console.error('Order creation error:', error);
+        throw error;
       }
+
+      if (!orderResult || orderResult.length === 0) {
+        throw new Error('No order data returned');
+      }
+
+      const { order_id: orderId, confirmation_token: confirmationToken } = orderResult[0];
 
       // Clear cart and navigate to confirmation with token
       clearCart();
