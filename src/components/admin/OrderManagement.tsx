@@ -16,6 +16,16 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -24,6 +34,7 @@ import {
 } from '@/components/ui/select';
 import { toast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
+import { Trash2 } from 'lucide-react';
 
 type OrderStatus = 'new' | 'confirmed' | 'in_delivery' | 'delivered' | 'cancelled';
 
@@ -60,6 +71,8 @@ export const OrderManagement = () => {
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [orderToDelete, setOrderToDelete] = useState<Order | null>(null);
 
   useEffect(() => {
     fetchOrders();
@@ -156,6 +169,49 @@ export const OrderManagement = () => {
     }
   };
 
+  const handleDeleteClick = (order: Order) => {
+    setOrderToDelete(order);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!orderToDelete) return;
+
+    try {
+      // First delete order items
+      const { error: itemsError } = await supabase
+        .from('order_items')
+        .delete()
+        .eq('order_id', orderToDelete.id);
+
+      if (itemsError) throw itemsError;
+
+      // Then delete the order
+      const { error: orderError } = await supabase
+        .from('orders')
+        .delete()
+        .eq('id', orderToDelete.id);
+
+      if (orderError) throw orderError;
+
+      setOrders(prev => prev.filter(o => o.id !== orderToDelete.id));
+      toast({
+        title: 'Order deleted',
+        description: 'The order has been deleted successfully',
+      });
+    } catch (error) {
+      console.error('Error deleting order:', error);
+      toast({
+        title: 'Error deleting order',
+        description: 'Failed to delete the order',
+        variant: 'destructive',
+      });
+    } finally {
+      setDeleteDialogOpen(false);
+      setOrderToDelete(null);
+    }
+  };
+
   if (loading) {
     return <div>Loading orders...</div>;
   }
@@ -197,9 +253,17 @@ export const OrderManagement = () => {
                     {order.order_status}
                   </span>
                 </TableCell>
-                <TableCell>
+                <TableCell className="text-right space-x-2">
                   <Button variant="outline" size="sm" onClick={() => handleOrderClick(order)}>
                     View Details
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => handleDeleteClick(order)}
+                    className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                  >
+                    <Trash2 className="h-4 w-4" />
                   </Button>
                 </TableCell>
               </TableRow>
@@ -311,6 +375,28 @@ export const OrderManagement = () => {
           )}
         </DialogContent>
       </Dialog>
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Order</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this order? This action cannot be undone.
+              {orderToDelete && (
+                <span className="block mt-2 font-medium">
+                  Order from {orderToDelete.customer_first_name} {orderToDelete.customer_last_name} - €{Number(orderToDelete.total_amount).toFixed(2)}
+                </span>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteConfirm} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
