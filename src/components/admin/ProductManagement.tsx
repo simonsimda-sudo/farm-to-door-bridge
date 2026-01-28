@@ -137,7 +137,11 @@ export function ProductManagement() {
       .eq("id", id);
 
     if (error) {
-      toast.error("Failed to delete product");
+      if (error.message.includes("foreign key constraint")) {
+        toast.error("Cannot delete product: it has existing orders. Consider marking it as 'Out of Stock' instead.");
+      } else {
+        toast.error("Failed to delete product: " + error.message);
+      }
     } else {
       toast.success("Product deleted successfully");
       fetchData();

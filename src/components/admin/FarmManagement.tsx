@@ -107,7 +107,11 @@ export function FarmManagement() {
       .eq("id", id);
 
     if (error) {
-      toast.error("Failed to delete farm");
+      if (error.message.includes("foreign key constraint")) {
+        toast.error("Cannot delete farm: it has associated products. Delete the products first.");
+      } else {
+        toast.error("Failed to delete farm: " + error.message);
+      }
     } else {
       toast.success("Farm deleted successfully");
       fetchFarms();
