@@ -329,6 +329,26 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      create_order_with_items: {
+        Args: {
+          _customer_email: string
+          _customer_first_name: string
+          _customer_last_name: string
+          _customer_phone: string
+          _delivery_city: string
+          _delivery_country: string
+          _delivery_date: string
+          _delivery_notes: string
+          _delivery_postal_code: string
+          _delivery_street: string
+          _delivery_time_slot: string
+          _items: Json
+        }
+        Returns: {
+          confirmation_token: string
+          order_id: string
+        }[]
+      }
       get_order_by_token: {
         Args: { _confirmation_token: string; _order_id: string }
         Returns: {
