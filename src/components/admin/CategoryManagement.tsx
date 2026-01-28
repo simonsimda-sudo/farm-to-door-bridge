@@ -91,7 +91,11 @@ export function CategoryManagement() {
       .eq("id", id);
 
     if (error) {
-      toast.error("Failed to delete category");
+      if (error.message.includes("foreign key constraint")) {
+        toast.error("Cannot delete category: it has associated products. Remove products from this category first.");
+      } else {
+        toast.error("Failed to delete category: " + error.message);
+      }
     } else {
       toast.success("Category deleted successfully");
       fetchCategories();
