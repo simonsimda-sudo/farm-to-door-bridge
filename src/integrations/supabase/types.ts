@@ -240,6 +240,51 @@ export type Database = {
         }
         Relationships: []
       }
+      producer_submissions: {
+        Row: {
+          admin_note: string | null
+          categories: string | null
+          certifications: string | null
+          created_at: string
+          email: string
+          id: string
+          location: string
+          name: string
+          payload: Json
+          phone: string | null
+          profile: string | null
+          status: string
+        }
+        Insert: {
+          admin_note?: string | null
+          categories?: string | null
+          certifications?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          location: string
+          name: string
+          payload: Json
+          phone?: string | null
+          profile?: string | null
+          status?: string
+        }
+        Update: {
+          admin_note?: string | null
+          categories?: string | null
+          certifications?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          location?: string
+          name?: string
+          payload?: Json
+          phone?: string | null
+          profile?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
       products: {
         Row: {
           category_id: string | null

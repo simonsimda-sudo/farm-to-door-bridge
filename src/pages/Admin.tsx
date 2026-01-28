@@ -9,6 +9,7 @@ import { ProductManagement } from "@/components/admin/ProductManagement";
 import { CategoryManagement } from "@/components/admin/CategoryManagement";
 import UserManagement from "@/components/admin/UserManagement";
 import { OrderManagement } from "@/components/admin/OrderManagement";
+import { SubmissionsManagement } from "@/components/admin/SubmissionsManagement";
 import { LogOut } from "lucide-react";
 
 export default function Admin() {
@@ -78,8 +79,9 @@ export default function Admin() {
 
       <main className="container mx-auto px-4 py-8">
         <Tabs defaultValue="orders" className="w-full">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="orders">Orders</TabsTrigger>
+            <TabsTrigger value="submissions">Submissions</TabsTrigger>
             <TabsTrigger value="farms">Farms</TabsTrigger>
             <TabsTrigger value="products">Products</TabsTrigger>
             <TabsTrigger value="categories">Categories</TabsTrigger>
@@ -88,6 +90,10 @@ export default function Admin() {
 
           <TabsContent value="orders" className="mt-6">
             <OrderManagement />
+          </TabsContent>
+
+          <TabsContent value="submissions" className="mt-6">
+            <SubmissionsManagement />
           </TabsContent>
 
           <TabsContent value="farms" className="mt-6">
