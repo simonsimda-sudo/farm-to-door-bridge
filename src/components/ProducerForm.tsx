@@ -9,6 +9,8 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { cn } from "@/lib/utils";
 import { trackFormSubmit } from "@/hooks/useAnalytics";
+import { supabase } from "@/integrations/supabase/client";
+import { CheckCircle2 } from "lucide-react";
 
 interface ProducerFormProps {
   open: boolean;
@@ -52,6 +54,7 @@ export const ProducerForm = ({ open, onOpenChange }: ProducerFormProps) => {
   const [errors, setErrors] = useState<FormErrors>({});
   const [touched, setTouched] = useState<Partial<Record<keyof FormData, boolean>>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const validateField = (field: keyof FormData, value: string): string | undefined => {
     const schema = createFormSchema(t);
@@ -72,6 +75,28 @@ export const ProducerForm = ({ open, onOpenChange }: ProducerFormProps) => {
       const error = validateField(field, value);
       setErrors((prev) => ({ ...prev, [field]: error }));
     }
+  };
+
+  const resetForm = () => {
+    setFormData({
+      name: "",
+      email: "",
+      phone: "",
+      location: "",
+      categories: "",
+      certifications: "",
+      profile: "",
+    });
+    setErrors({});
+    setTouched({});
+    setIsSuccess(false);
+  };
+
+  const handleOpenChange = (newOpen: boolean) => {
+    if (!newOpen) {
+      resetForm();
+    }
+    onOpenChange(newOpen);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -99,23 +124,32 @@ export const ProducerForm = ({ open, onOpenChange }: ProducerFormProps) => {
     }
 
     try {
-      const emailBody = `
-New Producer Application:
+      // Store submission in database
+      const { error: dbError } = await supabase
+        .from('producer_submissions')
+        .insert({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone || null,
+          location: formData.location,
+          categories: formData.categories || null,
+          certifications: formData.certifications || null,
+          profile: formData.profile || null,
+          payload: formData,
+          status: 'new',
+        });
 
-Name: ${formData.name}
-Email: ${formData.email}
-Phone: ${formData.phone}
-Location: ${formData.location}
-Product Categories: ${formData.categories}
-Certifications: ${formData.certifications}
-Profile: ${formData.profile}
-      `;
-
-      const mailtoLink = `mailto:simon@trybiobridge.com?subject=New Producer Application - ${encodeURIComponent(formData.name)}&body=${encodeURIComponent(emailBody)}`;
-      window.location.href = mailtoLink;
+      if (dbError) {
+        console.error('Database error:', dbError);
+        throw dbError;
+      }
 
       trackFormSubmit('producer_form');
-      toast.success(t('producerForm.toast.success'));
+      
+      // Show success state inline
+      setIsSuccess(true);
+      
+      // Clear form data
       setFormData({
         name: "",
         email: "",
@@ -127,8 +161,8 @@ Profile: ${formData.profile}
       });
       setErrors({});
       setTouched({});
-      onOpenChange(false);
     } catch (error) {
+      console.error('Error submitting form:', error);
       toast.error(t('producerForm.toast.error'));
     } finally {
       setIsSubmitting(false);
@@ -142,124 +176,141 @@ Profile: ${formData.profile}
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="text-2xl">{t('producerForm.title')}</DialogTitle>
-          <DialogDescription>
-            {t('producerForm.description')}
-          </DialogDescription>
-        </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-6" noValidate>
-          <div className="space-y-2">
-            <Label htmlFor="name" className={cn(touched.name && errors.name && "text-destructive")}>
-              {t('producerForm.name')}
-            </Label>
-            <Input
-              id="name"
-              value={formData.name}
-              onChange={(e) => handleChange("name", e.target.value)}
-              onBlur={() => handleBlur("name")}
-              placeholder={t('producerForm.namePlaceholder')}
-              className={getInputClassName("name")}
-              aria-invalid={touched.name && !!errors.name}
-              aria-describedby={errors.name ? "name-error" : undefined}
-            />
-            {touched.name && errors.name && (
-              <p id="name-error" className="text-sm text-destructive">{errors.name}</p>
-            )}
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="email" className={cn(touched.email && errors.email && "text-destructive")}>
-              {t('producerForm.email')}
-            </Label>
-            <Input
-              id="email"
-              type="email"
-              value={formData.email}
-              onChange={(e) => handleChange("email", e.target.value)}
-              onBlur={() => handleBlur("email")}
-              placeholder={t('producerForm.emailPlaceholder')}
-              className={getInputClassName("email")}
-              aria-invalid={touched.email && !!errors.email}
-              aria-describedby={errors.email ? "email-error" : undefined}
-            />
-            {touched.email && errors.email && (
-              <p id="email-error" className="text-sm text-destructive">{errors.email}</p>
-            )}
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="phone">{t('producerForm.phone')}</Label>
-            <Input
-              id="phone"
-              type="tel"
-              value={formData.phone}
-              onChange={(e) => handleChange("phone", e.target.value)}
-              placeholder={t('producerForm.phonePlaceholder')}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="location" className={cn(touched.location && errors.location && "text-destructive")}>
-              {t('producerForm.location')}
-            </Label>
-            <Input
-              id="location"
-              value={formData.location}
-              onChange={(e) => handleChange("location", e.target.value)}
-              onBlur={() => handleBlur("location")}
-              placeholder={t('producerForm.locationPlaceholder')}
-              className={getInputClassName("location")}
-              aria-invalid={touched.location && !!errors.location}
-              aria-describedby={errors.location ? "location-error" : undefined}
-            />
-            {touched.location && errors.location && (
-              <p id="location-error" className="text-sm text-destructive">{errors.location}</p>
-            )}
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="categories">{t('producerForm.categories')}</Label>
-            <Input
-              id="categories"
-              value={formData.categories}
-              onChange={(e) => handleChange("categories", e.target.value)}
-              placeholder={t('producerForm.categoriesPlaceholder')}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="certifications">{t('producerForm.certifications')}</Label>
-            <Input
-              id="certifications"
-              value={formData.certifications}
-              onChange={(e) => handleChange("certifications", e.target.value)}
-              placeholder={t('producerForm.certificationsPlaceholder')}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="profile">{t('producerForm.farmProfile')}</Label>
-            <Textarea
-              id="profile"
-              value={formData.profile}
-              onChange={(e) => handleChange("profile", e.target.value)}
-              placeholder={t('producerForm.farmProfilePlaceholder')}
-              rows={6}
-            />
-          </div>
-
-          <div className="flex gap-4">
-            <Button type="submit" disabled={isSubmitting} className="flex-1">
-              {isSubmitting ? t('producerForm.submitting') : t('producerForm.submitApplication')}
-            </Button>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              {t('common.cancel')}
+        {isSuccess ? (
+          <div className="py-8 text-center space-y-4">
+            <CheckCircle2 className="h-16 w-16 text-green-600 mx-auto" />
+            <h2 className="text-2xl font-bold text-foreground">
+              {t('producerForm.successTitle')}
+            </h2>
+            <p className="text-muted-foreground max-w-md mx-auto">
+              {t('producerForm.successMessage')}
+            </p>
+            <Button onClick={() => handleOpenChange(false)} className="mt-4">
+              {t('common.close')}
             </Button>
           </div>
-        </form>
+        ) : (
+          <>
+            <DialogHeader>
+              <DialogTitle className="text-2xl">{t('producerForm.title')}</DialogTitle>
+              <DialogDescription>
+                {t('producerForm.description')}
+              </DialogDescription>
+            </DialogHeader>
+            <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+              <div className="space-y-2">
+                <Label htmlFor="name" className={cn(touched.name && errors.name && "text-destructive")}>
+                  {t('producerForm.name')}
+                </Label>
+                <Input
+                  id="name"
+                  value={formData.name}
+                  onChange={(e) => handleChange("name", e.target.value)}
+                  onBlur={() => handleBlur("name")}
+                  placeholder={t('producerForm.namePlaceholder')}
+                  className={getInputClassName("name")}
+                  aria-invalid={touched.name && !!errors.name}
+                  aria-describedby={errors.name ? "name-error" : undefined}
+                />
+                {touched.name && errors.name && (
+                  <p id="name-error" className="text-sm text-destructive">{errors.name}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="email" className={cn(touched.email && errors.email && "text-destructive")}>
+                  {t('producerForm.email')}
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => handleChange("email", e.target.value)}
+                  onBlur={() => handleBlur("email")}
+                  placeholder={t('producerForm.emailPlaceholder')}
+                  className={getInputClassName("email")}
+                  aria-invalid={touched.email && !!errors.email}
+                  aria-describedby={errors.email ? "email-error" : undefined}
+                />
+                {touched.email && errors.email && (
+                  <p id="email-error" className="text-sm text-destructive">{errors.email}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="phone">{t('producerForm.phone')}</Label>
+                <Input
+                  id="phone"
+                  type="tel"
+                  value={formData.phone}
+                  onChange={(e) => handleChange("phone", e.target.value)}
+                  placeholder={t('producerForm.phonePlaceholder')}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="location" className={cn(touched.location && errors.location && "text-destructive")}>
+                  {t('producerForm.location')}
+                </Label>
+                <Input
+                  id="location"
+                  value={formData.location}
+                  onChange={(e) => handleChange("location", e.target.value)}
+                  onBlur={() => handleBlur("location")}
+                  placeholder={t('producerForm.locationPlaceholder')}
+                  className={getInputClassName("location")}
+                  aria-invalid={touched.location && !!errors.location}
+                  aria-describedby={errors.location ? "location-error" : undefined}
+                />
+                {touched.location && errors.location && (
+                  <p id="location-error" className="text-sm text-destructive">{errors.location}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="categories">{t('producerForm.categories')}</Label>
+                <Input
+                  id="categories"
+                  value={formData.categories}
+                  onChange={(e) => handleChange("categories", e.target.value)}
+                  placeholder={t('producerForm.categoriesPlaceholder')}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="certifications">{t('producerForm.certifications')}</Label>
+                <Input
+                  id="certifications"
+                  value={formData.certifications}
+                  onChange={(e) => handleChange("certifications", e.target.value)}
+                  placeholder={t('producerForm.certificationsPlaceholder')}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="profile">{t('producerForm.farmProfile')}</Label>
+                <Textarea
+                  id="profile"
+                  value={formData.profile}
+                  onChange={(e) => handleChange("profile", e.target.value)}
+                  placeholder={t('producerForm.farmProfilePlaceholder')}
+                  rows={6}
+                />
+              </div>
+
+              <div className="flex gap-4">
+                <Button type="submit" disabled={isSubmitting} className="flex-1">
+                  {isSubmitting ? t('producerForm.submitting') : t('producerForm.submitApplication')}
+                </Button>
+                <Button type="button" variant="outline" onClick={() => handleOpenChange(false)}>
+                  {t('common.cancel')}
+                </Button>
+              </div>
+            </form>
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );
