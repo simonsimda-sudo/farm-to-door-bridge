@@ -1,5 +1,5 @@
+import { createElement } from "react";
 import { createRoot } from "react-dom/client";
-import App from "./App.tsx";
 import "./index.css";
 import "./i18n";
 
@@ -93,4 +93,11 @@ import "./i18n";
   }) as any;
 })();
 
-createRoot(document.getElementById("root")!).render(<App />);
+// IMPORTANT: We dynamically import App *after* the fetch-sanitizer is installed.
+// With ESM, static imports are executed before this module's top-level code.
+// If App (or its dependencies) initializes the backend client during module
+// evaluation, it may capture the original fetch before our sanitizer runs.
+(async () => {
+  const { default: App } = await import("./App.tsx");
+  createRoot(document.getElementById("root")!).render(createElement(App));
+})();
