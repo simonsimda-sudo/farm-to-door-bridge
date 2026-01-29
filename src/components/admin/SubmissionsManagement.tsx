@@ -30,6 +30,7 @@ import {
 import { toast } from "sonner";
 import { Eye, Trash2, Search, MessageSquare } from "lucide-react";
 import { format } from "date-fns";
+import { formatBackendError, isAbortLikeError } from "@/lib/error-utils";
 
 interface Submission {
   id: string;
@@ -62,18 +63,25 @@ export function SubmissionsManagement() {
 
   const fetchSubmissions = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from("producer_submissions")
-      .select("*")
-      .order("created_at", { ascending: false });
+    try {
+      const { data, error } = await supabase
+        .from("producer_submissions")
+        .select("*")
+        .order("created_at", { ascending: false });
 
-    if (error) {
+      if (error) {
+        console.error("Error fetching submissions:", error);
+        toast.error(`${t("admin.submissions.toast.loadError")}: ${formatBackendError(error)}`);
+      } else {
+        setSubmissions(data || []);
+      }
+    } catch (error) {
+      if (isAbortLikeError(error)) return;
       console.error("Error fetching submissions:", error);
-      toast.error(t("admin.submissions.toast.loadError"));
-    } else {
-      setSubmissions(data || []);
+      toast.error(`${t("admin.submissions.toast.loadError")}: ${formatBackendError(error)}`);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const handleStatusChange = async (id: string, newStatus: string) => {

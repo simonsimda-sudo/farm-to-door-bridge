@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
 import { Plus, Edit, Trash2 } from "lucide-react";
+import { formatBackendError, isAbortLikeError } from "@/lib/error-utils";
 
 type Product = {
   id: string;
@@ -54,22 +55,41 @@ export function ProductManagement() {
   }, []);
 
   const fetchData = async () => {
-    const [productsRes, farmsRes, categoriesRes] = await Promise.all([
-      supabase.from("products").select("*").order("name"),
-      supabase.from("farms").select("id, name").order("name"),
-      supabase.from("categories").select("id, name").order("name"),
-    ]);
+    setLoading(true);
+    try {
+      const [productsRes, farmsRes, categoriesRes] = await Promise.all([
+        supabase.from("products").select("*").order("name"),
+        supabase.from("farms").select("id, name").order("name"),
+        supabase.from("categories").select("id, name").order("name"),
+      ]);
 
-    if (productsRes.error) toast.error("Failed to load products");
-    else setProducts(productsRes.data || []);
+      if (productsRes.error) {
+        console.error("Error fetching products:", productsRes.error);
+        toast.error(`Failed to load products: ${formatBackendError(productsRes.error)}`);
+      } else {
+        setProducts(productsRes.data || []);
+      }
 
-    if (farmsRes.error) toast.error("Failed to load farms");
-    else setFarms(farmsRes.data || []);
+      if (farmsRes.error) {
+        console.error("Error fetching farms:", farmsRes.error);
+        toast.error(`Failed to load farms: ${formatBackendError(farmsRes.error)}`);
+      } else {
+        setFarms(farmsRes.data || []);
+      }
 
-    if (categoriesRes.error) toast.error("Failed to load categories");
-    else setCategories(categoriesRes.data || []);
-
-    setLoading(false);
+      if (categoriesRes.error) {
+        console.error("Error fetching categories:", categoriesRes.error);
+        toast.error(`Failed to load categories: ${formatBackendError(categoriesRes.error)}`);
+      } else {
+        setCategories(categoriesRes.data || []);
+      }
+    } catch (error) {
+      if (isAbortLikeError(error)) return;
+      console.error("Error fetching product management data:", error);
+      toast.error(`Failed to load product data: ${formatBackendError(error)}`);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {

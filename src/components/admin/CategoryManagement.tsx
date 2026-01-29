@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
 import { Plus, Edit, Trash2 } from "lucide-react";
+import { formatBackendError, isAbortLikeError } from "@/lib/error-utils";
 
 type Category = {
   id: string;
@@ -28,17 +29,24 @@ export function CategoryManagement() {
   }, []);
 
   const fetchCategories = async () => {
-    const { data, error } = await supabase
-      .from("categories")
-      .select("*")
-      .order("name");
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.from("categories").select("*").order("name");
 
-    if (error) {
-      toast.error("Failed to load categories");
-    } else {
+      if (error) {
+        console.error("Error fetching categories:", error);
+        toast.error(`Failed to load categories: ${formatBackendError(error)}`);
+        return;
+      }
+
       setCategories(data || []);
+    } catch (error) {
+      if (isAbortLikeError(error)) return;
+      console.error("Error fetching categories:", error);
+      toast.error(`Failed to load categories: ${formatBackendError(error)}`);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {

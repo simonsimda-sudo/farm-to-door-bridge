@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
 import { Plus, Edit, Trash2 } from "lucide-react";
+import { formatBackendError, isAbortLikeError } from "@/lib/error-utils";
 
 type Farm = {
   id: string;
@@ -39,17 +40,24 @@ export function FarmManagement() {
   }, []);
 
   const fetchFarms = async () => {
-    const { data, error } = await supabase
-      .from("farms")
-      .select("*")
-      .order("name");
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.from("farms").select("*").order("name");
 
-    if (error) {
-      toast.error("Failed to load farms");
-    } else {
+      if (error) {
+        console.error("Error fetching farms:", error);
+        toast.error(`Failed to load farms: ${formatBackendError(error)}`);
+        return;
+      }
+
       setFarms(data || []);
+    } catch (error) {
+      if (isAbortLikeError(error)) return;
+      console.error("Error fetching farms:", error);
+      toast.error(`Failed to load farms: ${formatBackendError(error)}`);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
