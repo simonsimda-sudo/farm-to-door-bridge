@@ -29,15 +29,22 @@ export default function Admin() {
       return;
     }
 
-    // Check if user has admin role
-    const { data: roles, error } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", session.user.id)
-      .eq("role", "admin")
-      .maybeSingle();
+    // Check if user has admin role using the security definer function
+    // This bypasses RLS and avoids the chicken-and-egg problem
+    const { data: hasAdminRole, error } = await supabase
+      .rpc('has_role', { 
+        _user_id: session.user.id, 
+        _role: 'admin' 
+      });
 
-    if (error || !roles) {
+    if (error) {
+      console.error('Error checking admin role:', error);
+      toast.error("Error checking permissions. Please try again.");
+      navigate("/");
+      return;
+    }
+
+    if (!hasAdminRole) {
       toast.error("Access denied. Admin role required.");
       navigate("/");
       return;
