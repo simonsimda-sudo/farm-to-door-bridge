@@ -17,30 +17,71 @@ import "./i18n";
   const backendBaseUrl = import.meta.env.VITE_SUPABASE_URL as string | undefined;
   if (!backendBaseUrl) return;
 
+  const isDev = import.meta.env.DEV;
+  let backendOrigin: string;
+  try {
+    backendOrigin = new URL(backendBaseUrl).origin;
+  } catch {
+    return;
+  }
+  const reservedKeys = new Set(["select", "order", "limit", "offset"]);
+  const isNumeric = (value: string) => /^\d+(?:\.\d+)?$/.test(value);
+
+  const shouldStripParam = (key: string, value: string) => {
+    // Example: ...&7008208  (PostgREST reads it as a filter key)
+    if (/^\d+$/.test(key) && value === "") return true;
+
+    // Example: ...&_=7446895  (common cache-buster; PostgREST reads '_' as a filter key)
+    // More generally: if a non-reserved param has a purely numeric value, it's not a valid PostgREST
+    // filter expression (missing operator), and causes PGRST100.
+    if (!reservedKeys.has(key) && isNumeric(value)) return true;
+
+    return false;
+  };
+
   const originalFetch = window.fetch.bind(window);
 
   window.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
     try {
-      // supabase-js uses string URLs; keep other RequestInfo types untouched.
       const urlString =
         typeof input === "string"
           ? input
           : input instanceof URL
             ? input.toString()
-            : undefined;
+            : input instanceof Request
+              ? input.url
+              : undefined;
 
-      if (urlString && urlString.startsWith(backendBaseUrl)) {
+      if (urlString) {
         const url = new URL(urlString);
+        if (url.origin !== backendOrigin) {
+          return originalFetch(input as any, init);
+        }
+
         let changed = false;
 
         for (const [key, value] of Array.from(url.searchParams.entries())) {
-          if (/^\d+$/.test(key) && value === "") {
+          if (shouldStripParam(key, value)) {
             url.searchParams.delete(key);
             changed = true;
           }
         }
 
         if (changed) {
+          if (isDev) {
+            // Helpful for confirming the sanitizer is active.
+            console.debug("[fetch-sanitizer] cleaned URL", {
+              before: urlString,
+              after: url.toString(),
+            });
+          }
+
+          // If supabase-js passes a Request object, we must re-create it with the sanitized URL.
+          if (input instanceof Request) {
+            const sanitizedRequest = new Request(url.toString(), input);
+            return originalFetch(sanitizedRequest, init);
+          }
+
           return originalFetch(url.toString(), init);
         }
       }
