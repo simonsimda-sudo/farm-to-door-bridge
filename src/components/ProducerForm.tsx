@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { cn } from "@/lib/utils";
 import { trackFormSubmit } from "@/hooks/useAnalytics";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/supabase/sanitized-client";
 import { CheckCircle2 } from "lucide-react";
 
 interface ProducerFormProps {
