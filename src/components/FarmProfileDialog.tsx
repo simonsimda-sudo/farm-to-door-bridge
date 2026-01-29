@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { ShieldCheck, MapPin, Leaf } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/supabase/sanitized-client";
 import { useToast } from "@/hooks/use-toast";
 
 interface FarmProfileDialogProps {

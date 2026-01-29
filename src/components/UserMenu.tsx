@@ -11,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/supabase/sanitized-client";
 import { useToast } from "@/hooks/use-toast";
 
 export const UserMenu = () => {

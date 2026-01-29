@@ -17,7 +17,7 @@ import { Link } from "react-router-dom";
 import { ProducerForm } from "@/components/ProducerForm";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { UserMenu } from "@/components/UserMenu";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/supabase/sanitized-client";
 import { useToast } from "@/hooks/use-toast";
 import { trackCtaClick } from "@/hooks/useAnalytics";
 
