@@ -62,10 +62,29 @@ const sanitizedFetch: typeof fetch = async (input, init) => {
         }
 
         if (changed) {
-          // If a Request object is passed, we must re-create it with the sanitized URL.
           if (input instanceof Request) {
-            return baseFetch(new Request(url.toString(), input), init);
+            const requestInit: RequestInit = {
+              ...init,
+              method: input.method,
+              headers: input.headers,
+              signal: input.signal,
+              credentials: input.credentials,
+              cache: input.cache,
+              redirect: input.redirect,
+              referrer: input.referrer,
+              referrerPolicy: input.referrerPolicy,
+              integrity: input.integrity,
+              keepalive: input.keepalive,
+              mode: input.mode,
+            };
+
+            if (input.method !== "GET" && input.method !== "HEAD") {
+              requestInit.body = input.body as any;
+            }
+
+            return baseFetch(url.toString(), requestInit);
           }
+
           return baseFetch(url.toString(), init);
         }
       }

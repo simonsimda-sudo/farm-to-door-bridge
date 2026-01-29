@@ -29,7 +29,7 @@ import "./i18n";
 
   const shouldStripParam = (key: string, value: string) => {
     // Example: ...&7008208  (PostgREST reads it as a filter key)
-    if (/^\d+$/.test(key) && value === "") return true;
+    if (/^\d+$/.test(key)) return true;
 
     // Example: ...&_=7446895  (common cache-buster; PostgREST reads '_' as a filter key)
     // More generally: if a non-reserved param has a purely numeric value, it's not a valid PostgREST
@@ -76,10 +76,30 @@ import "./i18n";
             });
           }
 
-          // If supabase-js passes a Request object, we must re-create it with the sanitized URL.
+          // If supabase-js passes a Request object, avoid re-constructing via `new Request(url, req)`
+          // (can be brittle across runtimes). Instead, forward a string URL plus a RequestInit
+          // derived from the original request.
           if (input instanceof Request) {
-            const sanitizedRequest = new Request(url.toString(), input);
-            return originalFetch(sanitizedRequest, init);
+            const requestInit: RequestInit = {
+              ...init,
+              method: input.method,
+              headers: input.headers,
+              signal: input.signal,
+              credentials: input.credentials,
+              cache: input.cache,
+              redirect: input.redirect,
+              referrer: input.referrer,
+              referrerPolicy: input.referrerPolicy,
+              integrity: input.integrity,
+              keepalive: input.keepalive,
+              mode: input.mode,
+            };
+
+            if (input.method !== "GET" && input.method !== "HEAD") {
+              requestInit.body = input.body as any;
+            }
+
+            return originalFetch(url.toString(), requestInit);
           }
 
           return originalFetch(url.toString(), init);
