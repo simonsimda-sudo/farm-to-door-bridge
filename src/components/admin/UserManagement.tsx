@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { Loader2, UserPlus, UserMinus } from "lucide-react";
+import { formatBackendError, isAbortLikeError } from "@/lib/error-utils";
 
 interface User {
   id: string;
@@ -27,8 +28,9 @@ export default function UserManagement() {
       
       setUsers(data.users || []);
     } catch (error: any) {
+      if (isAbortLikeError(error)) return;
       console.error('Error fetching users:', error);
-      toast.error('Failed to load users');
+      toast.error(`Failed to load users: ${formatBackendError(error)}`);
     } finally {
       setLoading(false);
     }

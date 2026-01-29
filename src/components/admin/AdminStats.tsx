@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Package, ShoppingCart, FileText, Leaf } from "lucide-react";
+import { formatBackendError, isAbortLikeError } from "@/lib/error-utils";
 
 interface Stats {
   totalOrders: number;
@@ -22,11 +23,26 @@ export function AdminStats() {
   const fetchStats = async () => {
     try {
       const [ordersRes, submissionsRes, productsRes, farmsRes] = await Promise.all([
-        supabase.from("orders").select("id", { count: "exact", head: true }),
-        supabase.from("producer_submissions").select("id", { count: "exact", head: true }).eq("status", "new"),
-        supabase.from("products").select("id", { count: "exact", head: true }),
-        supabase.from("farms").select("id", { count: "exact", head: true }),
+        // Avoid HEAD requests (can be blocked/aborted by some clients/proxies).
+        // We only need counts; limit to 1 row to keep payload tiny.
+        supabase.from("orders").select("id", { count: "exact" }).limit(1),
+        supabase
+          .from("producer_submissions")
+          .select("id", { count: "exact" })
+          .eq("status", "new")
+          .limit(1),
+        supabase.from("products").select("id", { count: "exact" }).limit(1),
+        supabase.from("farms").select("id", { count: "exact" }).limit(1),
       ]);
+
+      if (ordersRes.error || submissionsRes.error || productsRes.error || farmsRes.error) {
+        console.error("Failed to fetch admin stats", {
+          orders: ordersRes.error,
+          submissions: submissionsRes.error,
+          products: productsRes.error,
+          farms: farmsRes.error,
+        });
+      }
 
       setStats({
         totalOrders: ordersRes.count ?? 0,
@@ -35,7 +51,8 @@ export function AdminStats() {
         farmCount: farmsRes.count ?? 0,
       });
     } catch (error) {
-      console.error("Failed to fetch stats:", error);
+      if (isAbortLikeError(error)) return;
+      console.error("Failed to fetch stats:", formatBackendError(error));
     } finally {
       setLoading(false);
     }

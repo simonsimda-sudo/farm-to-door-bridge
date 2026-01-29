@@ -35,6 +35,7 @@ import {
 import { toast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 import { Trash2 } from 'lucide-react';
+import { formatBackendError, isAbortLikeError } from "@/lib/error-utils";
 
 type OrderStatus = 'new' | 'confirmed' | 'in_delivery' | 'delivered' | 'cancelled';
 
@@ -88,10 +89,11 @@ export const OrderManagement = () => {
       if (error) throw error;
       setOrders(data || []);
     } catch (error) {
+      if (isAbortLikeError(error)) return;
       console.error('Error fetching orders:', error);
       toast({
         title: 'Error loading orders',
-        description: 'Failed to fetch orders',
+        description: `Failed to load orders: ${formatBackendError(error)}`,
         variant: 'destructive',
       });
     } finally {
